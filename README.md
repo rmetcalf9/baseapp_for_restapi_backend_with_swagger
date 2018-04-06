@@ -1,6 +1,8 @@
 
 # baseapp_for_restapi_backend_with_swagger
-https://travis-ci.org/rmetcalf9/baseapp_for_restapi_backend_with_swagger.svg?branch=master
+
+[<img src="https://travis-ci.org/rmetcalf9/baseapp_for_restapi_backend_with_swagger.svg?branch=master">](https://travis-ci.org/rmetcalf9/baseapp_for_restapi_backend_with_swagger.svg?branch=master)
+
 
 Python package which provides a base application class for an app with a restapi backend that provides a swagger
 
