@@ -7,8 +7,22 @@
 Python package which provides a base application class for an app with a restapi backend that provides a swagger
 
 
+# Release process
+
+'''
+git tag 0.0.1
+'''
 
 # Information on building a python package
 
 https://www.youtube.com/watch?v=4fzAMdLKC5k
+
+
+# installs to make a package:
+
+pip install versioneer
+
+pip install wheel
+pip install twine
+pip install tox
 
