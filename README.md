@@ -11,6 +11,8 @@ Python package which provides a base application class for an app with a restapi
 
 '''
 git tag 0.0.1
+./setup.py sdist
+./python3 setup.py register sdist upload
 '''
 
 # Information on building a python package
@@ -31,3 +33,19 @@ pip install wheel
 pip install twine
 pip install tox
 
+
+## Create pypi file
+
+$HOME/.pypirc
+'''
+[distutils]
+index-servers=pypi
+
+[pypi]
+repository = https://pypi.python.org/pypi
+username = <username>
+password = <password>
+
+'''
+
+If you leave password blank you will be prompted
