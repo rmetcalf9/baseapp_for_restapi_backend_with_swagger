@@ -9,5 +9,5 @@ setup(name='baseapp_for_restapi_backend_with_swagger',
       author='Robert Metcalf',
       author_email='rmetcalf9@googlemail.com',
       license='MIT',
-      packages=['src/baseapp_for_restapi_backend_with_swagger'],
+      packages=['baseapp_for_restapi_backend_with_swagger'],
       zip_safe=False)
