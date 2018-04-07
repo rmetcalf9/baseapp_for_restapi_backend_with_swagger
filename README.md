@@ -18,7 +18,12 @@ git tag 0.0.1
 https://www.youtube.com/watch?v=4fzAMdLKC5k
 
 
+Versioneer notes: https://github.com/warner/python-versioneer/blob/master/INSTALL.md
+
 # installs to make a package:
+
+pip install tox
+
 
 pip install versioneer
 
