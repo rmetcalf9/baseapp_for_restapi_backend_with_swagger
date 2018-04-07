@@ -11,8 +11,9 @@ Python package which provides a base application class for an app with a restapi
 
 '''
 git tag 0.0.1
-./setup.py sdist
-./python3 setup.py register sdist upload
+python3 setup.py sdist
+python3 setup.py register sdist upload
+git push --tags 
 '''
 
 # Information on building a python package
