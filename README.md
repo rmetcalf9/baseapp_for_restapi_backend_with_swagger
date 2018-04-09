@@ -32,9 +32,16 @@ pip install tox
 pip install versioneer
 ###pip install wheel???
 
+pip install virtualenv
+pip install pipenv
+
 # Run tests
 '''
 nosetests
+'''
+
+'''
+pipenv run tox
 '''
 
 ## Create pypi file

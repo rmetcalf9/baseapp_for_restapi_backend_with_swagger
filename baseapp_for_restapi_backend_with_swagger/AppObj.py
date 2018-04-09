@@ -1,13 +1,14 @@
-from .GlobalParamaters import GlobalParamatersClass
 from flask import Flask, Blueprint
 import signal
-from .FlaskRestSubclass import FlaskRestSubclass
 from flask_restplus import fields
-from .webfrontendAPI import webfrontendBP, registerAPI as registerWebFrontendAPI
 import functools
-
 #I need jobs to be stored in order so pagination works
 from sortedcontainers import SortedDict
+
+from .GlobalParamaters import GlobalParamatersClass
+from .FlaskRestSubclass import FlaskRestSubclass
+from .webfrontendAPI import webfrontendBP, registerAPI as registerWebFrontendAPI
+
 
 
 class appObj():
