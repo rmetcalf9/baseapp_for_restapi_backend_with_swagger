@@ -1,6 +1,19 @@
 from setuptools import setup
 import versioneer
 
+sp_install_requires = [
+  'pytz==2017.3',
+  'flask==0.12.2',
+  'flask_restplus==0.10.1',
+  'python-dateutil==2.6.1',
+  'sortedcontainers==1.5.9'
+]
+sp_tests_require = [
+  'nose==1.3.7'
+]
+
+all_require = sp_install_requires + sp_tests_require
+
 setup(name='baseapp_for_restapi_backend_with_swagger',
       version=versioneer.get_version(),
       cmdclass=versioneer.get_cmdclass(),
@@ -10,4 +23,6 @@ setup(name='baseapp_for_restapi_backend_with_swagger',
       author_email='rmetcalf9@googlemail.com',
       license='MIT',
       packages=['baseapp_for_restapi_backend_with_swagger'],
-      zip_safe=False)
+      zip_safe=False,
+      install_requires=sp_install_requires,
+      tests_require=sp_tests_require)

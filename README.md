@@ -25,15 +25,17 @@ Versioneer notes: https://github.com/warner/python-versioneer/blob/master/INSTAL
 
 # installs to make a package:
 
+pip install nose
 pip install tox
 
 
 pip install versioneer
+###pip install wheel???
 
-pip install wheel
-pip install twine
-pip install tox
-
+# Run tests
+'''
+nosetests
+'''
 
 ## Create pypi file
 
