@@ -32,7 +32,7 @@ class FlaskRestSubclass(Api):
   def __init__(self, *args, reverse=False, **kwargs):
       super().__init__(*args, **kwargs)
       # Setup codes done this way because httpstatus isn't in python 3.3 or 3.4
-      if sys.version_info[0] < 3.4:
+      if sys.version_info[0] < 3.5:
         bc_HTTPStatus_OK = (200, 'OK', 'Request fulfilled, document follows')
         bc_HTTPStatus_NOT_FOUND = (404, 'Not Found','Nothing matches the given URI')
         bc_HTTPStatus_INTERNAL_SERVER_ERROR = (500, 'Internal Server Error','Server got itself in trouble')
