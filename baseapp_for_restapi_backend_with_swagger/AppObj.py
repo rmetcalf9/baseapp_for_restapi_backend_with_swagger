@@ -1,6 +1,7 @@
+
+from flask_restplus import fields
 from flask import Flask, Blueprint
 import signal
-from flask_restplus import fields
 import functools
 #I need jobs to be stored in order so pagination works
 from sortedcontainers import SortedDict
