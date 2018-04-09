@@ -1,18 +1,21 @@
 from flask_restplus import Api, apidoc, Swagger
 import re
 import json
-from http import HTTPStatus
 
 # http://michal.karzynski.pl/blog/2016/06/19/building-beautiful-restful-apis-using-flask-swagger-ui-flask-restplus/
 # https://flask-restplus.readthedocs.io/en/stable/
 # https://github.com/noirbizarre/flask-restplus
 
-
+import sys
 
 # I need to subclass this in order to change the url_prefix for swaggerui
 #  so I can reverse proxy everything under /apidocs
 class FlaskRestSubclass(Api):
   internalAPIPath = '/api'
+
+  bc_HTTPStatus_OK = None
+  bc_HTTPStatus_NOT_FOUND = None
+  bc_HTTPStatus_INTERNAL_SERVER_ERROR = None
 
   # Extra params inited manually
   apidocsurl = None 
@@ -28,6 +31,17 @@ class FlaskRestSubclass(Api):
 
   def __init__(self, *args, reverse=False, **kwargs):
       super().__init__(*args, **kwargs)
+      # Setup codes done this way because httpstatus isn't in python 3.3 or 3.4
+      if sys.version_info[0] < 3.4:
+        bc_HTTPStatus_OK = (200, 'OK', 'Request fulfilled, document follows')
+        bc_HTTPStatus_NOT_FOUND = (404, 'Not Found','Nothing matches the given URI')
+        bc_HTTPStatus_INTERNAL_SERVER_ERROR = (500, 'Internal Server Error','Server got itself in trouble')
+      else:
+        from http import HTTPStatus
+        self.bc_HTTPStatus_OK = HTTPStatus.OK
+        self.bc_HTTPStatus_NOT_FOUND = HTTPStatus.NOT_FOUND
+        self.bc_HTTPStatus_INTERNAL_SERVER_ERROR = HTTPStatus.INTERNAL_SERVER_ERROR
+
   def _register_apidoc(self, app):
     conf = app.extensions.setdefault('restplus', {})
     if not conf.get('apidoc_registered', False):
@@ -55,7 +69,7 @@ class FlaskRestSubclass(Api):
     if self._doc_view:
       return self._doc_view()
     elif not self._doc:
-      self.abort(HTTPStatus.NOT_FOUND)
+      self.abort(self.bc_HTTPStatus_NOT_FOUND)
     res = apidoc.ui_for(self)
     if (self.overrideAPIDOCSPath()):
       #print("About to replace")
@@ -70,7 +84,7 @@ class FlaskRestSubclass(Api):
   # as this is security protected I need this to be accessed in /apidocs/swagger.json as well
   def getSwaggerJSON(self):
     schema = self.__schema__
-    return json.dumps(schema), HTTPStatus.INTERNAL_SERVER_ERROR if 'error' in schema else HTTPStatus.OK, {'Content-Type': 'application/json'}
+    return json.dumps(schema), self.bc_HTTPStatus_INTERNAL_SERVER_ERROR if 'error' in schema else self.bc_HTTPStatus_OK, {'Content-Type': 'application/json'}
 
   #Override the basepath given in the swagger file
   # I need to give out a different one from where the endpoint is registered
