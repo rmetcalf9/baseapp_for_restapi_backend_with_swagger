@@ -1,5 +1,6 @@
 import os
 import json
+import sys
 from urllib.parse import urlparse
 
 invalidModeArgumentException = Exception('Invalid Mode Argument')
@@ -44,9 +45,14 @@ class GlobalParamatersClass():
     if (len(self.version) == 0):
       raise invalidVersionArgumentException
 
+    #JSONDecodeError only availiable in python 3.5 and up
+    errToCatch = json.decoder.JSONDecodeError
+    if sys.version_info[0] < 3.5:
+      errToCatch = ValueError
+
     try:
       self.apiaccesssecurity = json.loads(apiaccesssecuritySTR)
-    except json.decoder.JSONDecodeError:
+    except errToCatch:
       print('Invalid JSON for apiaccesssecurity - ' + apiaccesssecuritySTR)
       raise invalidInvalidApiaccesssecurityException
 
