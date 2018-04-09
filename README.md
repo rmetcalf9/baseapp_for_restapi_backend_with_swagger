@@ -9,12 +9,15 @@ Python package which provides a base application class for an app with a restapi
 
 # Release process
 
-'''
+````
+git tag -l #find latest tag
+
+
 git tag 0.0.1
 python3 setup.py sdist
 python3 setup.py register sdist upload
 git push --tags 
-'''
+````
 
 # Information on building a python package
 
@@ -36,18 +39,19 @@ pip install virtualenv
 pip install pipenv
 
 # Run tests
-'''
+````
 nosetests
-'''
+````
 
-'''
+````
+pipenv shell
 pipenv run tox
-'''
+````
 
 ## Create pypi file
 
 $HOME/.pypirc
-'''
+````
 [distutils]
 index-servers=pypi
 
@@ -56,6 +60,6 @@ repository = https://pypi.python.org/pypi
 username = <username>
 password = <password>
 
-'''
+````
 
 If you leave password blank you will be prompted

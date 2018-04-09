@@ -1,6 +1,7 @@
 from setuptools import setup
 import versioneer
 
+#Dependancy lists maintained here and in tox.ini
 sp_install_requires = [
   'pytz==2017.3',
   'flask==0.12.2',
