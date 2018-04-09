@@ -46,9 +46,9 @@ class GlobalParamatersClass():
       raise invalidVersionArgumentException
 
     #JSONDecodeError only availiable in python 3.5 and up
-    errToCatch = json.decoder.JSONDecodeError
-    if sys.version_info[0] < 3.5:
-      errToCatch = ValueError
+    errToCatch = ValueError
+    if sys.version_info[0] >= 3.5:
+      errToCatch = json.decoder.JSONDecodeError
 
     try:
       self.apiaccesssecurity = json.loads(apiaccesssecuritySTR)
