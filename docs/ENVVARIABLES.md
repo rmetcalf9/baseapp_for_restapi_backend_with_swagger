@@ -2,7 +2,7 @@
 
  | Name | Example Value | Meaning |
  | ---- | ------------- | ------- |
- | APIAPP_MODE | DOCKER | Can be DEVELOPER or DOCKER. This lets applications have different behavour when run inside docker. |
+ | APIAPP_MODE | DOCKER | Can be DEVELOPER or DOCKER. If it is set to DEVELOPER then the application will emmit Access-Control-Allow-* headers to allow for testing API's when called from browsers. This should never be set in production enviroments. |
  | APIAPP_VERSION | 0.0.9 | Read in from launch file to allow the code version to be stored by the application. Output in webserver info service call |
  | APIAPP_FRONTEND |  | URL the user uses to access the frontend application. This is required so internal url's in the apidocs are pointed correctly. |
  | APIAPP_APIURL |  | URL the frontend applicaton application needs to access the API. Output in webserver info service call |
