@@ -1,5 +1,5 @@
 from TestHelperSuperClass import testHelperSuperClass
-from baseapp_for_restapi_backend_with_swagger import GlobalParamatersClass, invalidModeArgumentException, invalidFrontentPathArgumentException, invalidVersionArgumentException, invalidInvalidApiaccesssecurityException
+from baseapp_for_restapi_backend_with_swagger import GlobalParamatersClass, getInvalidEnvVarParamaterException
 import json
 ##import os
 
@@ -36,7 +36,7 @@ class test_GlobalParamaters(testHelperSuperClass):
     }
     with self.assertRaises(Exception) as context:
       gp = GlobalParamatersClass(env)
-    self.checkGotRightException(context,invalidModeArgumentException)
+    self.checkGotRightException(context,getInvalidEnvVarParamaterException('APIAPP_MODE'))
 
   def test_webservicepathDosentExistThrowsException(self):
     env = {
@@ -48,7 +48,7 @@ class test_GlobalParamaters(testHelperSuperClass):
     }
     with self.assertRaises(Exception) as context:
       gp = GlobalParamatersClass(env)
-    self.checkGotRightException(context,invalidFrontentPathArgumentException)
+    self.checkGotRightException(context,getInvalidEnvVarParamaterException('APIAPP_FRONTEND'))
 
   def test_missingVersionThrowsException(self):
     env = {
@@ -60,7 +60,7 @@ class test_GlobalParamaters(testHelperSuperClass):
     }
     with self.assertRaises(Exception) as context:
       gp = GlobalParamatersClass(env)
-    self.checkGotRightException(context,invalidVersionArgumentException)
+    self.checkGotRightException(context,getInvalidEnvVarParamaterException('APIAPP_VERSION'))
 
   def test_validWebFrontendDirectory(self):
     env = {
@@ -165,7 +165,7 @@ class test_GlobalParamaters(testHelperSuperClass):
     }
     with self.assertRaises(Exception) as context:
       gp = GlobalParamatersClass(env)
-    self.checkGotRightException(context,invalidInvalidApiaccesssecurityException)
+    self.checkGotRightException(context,getInvalidEnvVarParamaterException('APIAPP_APIACCESSSECURITY'))
 
   def test_getAPIHost(self):
     env = {

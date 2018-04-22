@@ -10,7 +10,7 @@
 
 from .AppObj import appObj
 from .utils import from_iso8601
-from .GlobalParamaters import GlobalParamatersClass, invalidModeArgumentException, invalidFrontentPathArgumentException, invalidVersionArgumentException, invalidInvalidApiaccesssecurityException
+from .GlobalParamaters import GlobalParamatersClass, getInvalidEnvVarParamaterException
 from .FlaskRestSubclass import FlaskRestSubclass
 
 from ._version import get_versions

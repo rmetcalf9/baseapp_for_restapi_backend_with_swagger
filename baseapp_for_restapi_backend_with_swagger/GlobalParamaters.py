@@ -3,11 +3,32 @@ import json
 import sys
 from urllib.parse import urlparse
 
-invalidModeArgumentException = Exception('Invalid Mode Argument')
-invalidFrontentPathArgumentException = Exception('Invalid Web Frontend Path Argument')
-invalidVersionArgumentException = Exception('Invalid Version Argument')
-invalidInvalidApiaccesssecurityException = Exception('Invalid API Access Security Argument')
-invalidInvalidApiURLException = Exception('Invalid API URL Argument')
+exceptions = dict()
+def getInvalidEnvVarParamaterException(envVarName):
+  if envVarName not in exceptions:
+    exceptions[envVarName] = InvalidEnvVarParamaterExecption(envVarName)
+  return exceptions[envVarName]
+
+class InvalidEnvVarParamaterExecption(Exception):
+  def __init__(self, envVarName):
+    message = 'Invalid value for ' + envVarName
+    super(InvalidEnvVarParamaterExecption, self).__init__(message)
+
+#Read environment variable or raise an exception if it is missing and there is no default
+def readFromEnviroment(env, envVarName, defaultValue, acceptableValues, nullValueAllowed=False):
+  try:
+    val = env[envVarName]
+    if (acceptableValues != None):
+      if (val not in acceptableValues):
+        raise getInvalidEnvVarParamaterException(envVarName)
+    if not nullValueAllowed:
+      if val == '':
+        raise getInvalidEnvVarParamaterException(envVarName)
+    return val
+  except KeyError:
+    if (defaultValue == None):
+      raise getInvalidEnvVarParamaterException(envVarName)
+    return defaultValue
 
 # class to store GlobalParmaters
 class GlobalParamatersClass():
@@ -18,32 +39,19 @@ class GlobalParamatersClass():
   apidocsurl = None
   apiaccesssecurity = None
   
-  #Read environment variable or raise an exception if it is missing and there is no default
-  def readFromEnviroment(self, env, envVarName, defaultValue, exceptionToRaiseIfInvalid, acceptableValues):
-    try:
-      val = env[envVarName]
-      if (acceptableValues != None):
-        if (val not in acceptableValues):
-          raise exceptionToRaiseIfInvalid
-      return val
-    except KeyError:
-      if (defaultValue == None):
-        raise exceptionToRaiseIfInvalid
-      return defaultValue
-  
   def __init__(self, env):
-    self.mode = self.readFromEnviroment(env, 'APIAPP_MODE', None, invalidModeArgumentException, ['DEVELOPER','DOCKER'])
-    self.version = self.readFromEnviroment(env, 'APIAPP_VERSION', None, invalidVersionArgumentException, None)
-    self.webfrontendpath = self.readFromEnviroment(env, 'APIAPP_FRONTEND', None, invalidFrontentPathArgumentException, None)
-    self.apiurl = self.readFromEnviroment(env, 'APIAPP_APIURL', None, invalidInvalidApiURLException, None)
-    self.apidocsurl = self.readFromEnviroment(env, 'APIAPP_APIDOCSURL', '_', invalidInvalidApiURLException, None)
-    apiaccesssecuritySTR = self.readFromEnviroment(env, 'APIAPP_APIACCESSSECURITY', None, invalidInvalidApiaccesssecurityException, None)
+    self.mode = readFromEnviroment(env, 'APIAPP_MODE', None, ['DEVELOPER','DOCKER'])
+    self.version = readFromEnviroment(env, 'APIAPP_VERSION', None, None)
+    self.webfrontendpath = readFromEnviroment(env, 'APIAPP_FRONTEND', None, None)
+    self.apiurl = readFromEnviroment(env, 'APIAPP_APIURL', None, None)
+    self.apidocsurl = readFromEnviroment(env, 'APIAPP_APIDOCSURL', '_', None)
+    apiaccesssecuritySTR = readFromEnviroment(env, 'APIAPP_APIACCESSSECURITY', None, None)
 
     if (self.webfrontendpath != '_'):
       if (not os.path.isdir(self.webfrontendpath)):
-        raise invalidFrontentPathArgumentException
+        raise getInvalidEnvVarParamaterException('APIAPP_FRONTEND')
     if (len(self.version) == 0):
-      raise invalidVersionArgumentException
+      raise getInvalidEnvVarParamaterException('APIAPP_VERSION')
 
     #JSONDecodeError only availiable in python 3.5 and up
     errToCatch = ValueError
@@ -54,7 +62,7 @@ class GlobalParamatersClass():
       self.apiaccesssecurity = json.loads(apiaccesssecuritySTR)
     except errToCatch:
       print('Invalid JSON for apiaccesssecurity - ' + apiaccesssecuritySTR)
-      raise invalidInvalidApiaccesssecurityException
+      raise getInvalidEnvVarParamaterException('APIAPP_APIACCESSSECURITY')
 
   def getStartupOutput(self):
     r = 'Mode:' + self.mode + '\n'
