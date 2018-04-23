@@ -191,3 +191,27 @@ class test_GlobalParamaters(testHelperSuperClass):
     self.assertEqual(gp.getAPIHost(), 'apiurlxxx:45')
     self.assertEqual(gp.getAPIPath(), '/aa/bb/cc')
 
+  def test_PortOverride(self):
+    env = {
+      'APIAPP_MODE': 'DOCKER',
+      'APIAPP_VERSION': 'TEST-3.3.3',
+      'APIAPP_FRONTEND': self.appDir,
+      'APIAPP_APIURL': 'http://apiurlxxx:45/aa/bb/cc',
+      'APIAPP_APIACCESSSECURITY': '[]',
+      'APIAPP_PORT': '3456',
+    }
+    gp = GlobalParamatersClass(env)
+    self.assertEqual(gp.APIAPP_PORT, 3456)
+
+  def test_InvalidPortOverride(self):
+    env = {
+      'APIAPP_MODE': 'DOCKER',
+      'APIAPP_VERSION': 'TEST-3.3.3',
+      'APIAPP_FRONTEND': self.appDir,
+      'APIAPP_APIURL': 'http://apiurlxxx:45/aa/bb/cc',
+      'APIAPP_APIACCESSSECURITY': '[]',
+      'APIAPP_PORT': '3DD456',
+    }
+    with self.assertRaises(Exception) as context:
+      gp = GlobalParamatersClass(env)
+    self.checkGotRightException(context,getInvalidEnvVarParamaterException('APIAPP_PORT'))

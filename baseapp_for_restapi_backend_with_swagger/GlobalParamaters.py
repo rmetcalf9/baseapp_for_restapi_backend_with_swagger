@@ -43,6 +43,7 @@ class GlobalParamatersClass():
   apiurl = None
   apidocsurl = None
   apiaccesssecurity = None
+  APIAPP_PORT = None
   
   def __init__(self, env):
     self.mode = readFromEnviroment(env, 'APIAPP_MODE', None, ['DEVELOPER','DOCKER'])
@@ -51,6 +52,11 @@ class GlobalParamatersClass():
     self.apiurl = readFromEnviroment(env, 'APIAPP_APIURL', None, None)
     self.apidocsurl = readFromEnviroment(env, 'APIAPP_APIDOCSURL', '_', None)
     apiaccesssecuritySTR = readFromEnviroment(env, 'APIAPP_APIACCESSSECURITY', None, None)
+    APIAPP_PORTSTR = readFromEnviroment(env, 'APIAPP_PORT', '80', None)
+    try:
+      self.APIAPP_PORT = int(APIAPP_PORTSTR)
+    except:
+      raise getInvalidEnvVarParamaterException('APIAPP_PORT', actualValue=APIAPP_PORTSTR, messageOverride='Port must be a number')
 
     if (self.webfrontendpath != '_'):
       if (not os.path.isdir(self.webfrontendpath)):
@@ -76,6 +82,7 @@ class GlobalParamatersClass():
     r += 'apiurl:' + self.apiurl + '\n'
     r += 'apidocsurl:' + self.apidocsurl + '\n'
     r += 'apiaccesssecurity:' + json.dumps(self.apiaccesssecurity) + '\n'
+    #Not reporting POST as flask will output that for us
     return r
 
   def getDeveloperMode(self):
