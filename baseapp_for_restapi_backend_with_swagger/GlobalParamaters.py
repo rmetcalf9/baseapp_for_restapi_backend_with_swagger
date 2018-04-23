@@ -4,14 +4,19 @@ import sys
 from urllib.parse import urlparse
 
 exceptions = dict()
-def getInvalidEnvVarParamaterException(envVarName):
+def getInvalidEnvVarParamaterException(envVarName, actualValue=None, messageOverride=None):
   if envVarName not in exceptions:
-    exceptions[envVarName] = InvalidEnvVarParamaterExecption(envVarName)
+    exceptions[envVarName] = InvalidEnvVarParamaterExecption(envVarName, actualValue, messageOverride)
   return exceptions[envVarName]
 
 class InvalidEnvVarParamaterExecption(Exception):
-  def __init__(self, envVarName):
-    message = 'Invalid value for ' + envVarName
+  def __init__(self, envVarName, actualValue=None, messageOverride=None):
+    message = 'Invalid value for'
+    if messageOverride is not None:
+      message = messageOverride
+    message = message + ' ' + envVarName
+    if actualValue is not None:
+      message = message + ' got:' + actualValue
     super(InvalidEnvVarParamaterExecption, self).__init__(message)
 
 #Read environment variable or raise an exception if it is missing and there is no default
@@ -20,14 +25,14 @@ def readFromEnviroment(env, envVarName, defaultValue, acceptableValues, nullValu
     val = env[envVarName]
     if (acceptableValues != None):
       if (val not in acceptableValues):
-        raise getInvalidEnvVarParamaterException(envVarName)
+        raise getInvalidEnvVarParamaterException(envVarName, val, 'Not an acceptable value')
     if not nullValueAllowed:
       if val == '':
-        raise getInvalidEnvVarParamaterException(envVarName)
+        raise getInvalidEnvVarParamaterException(envVarName, None, 'Null/Empty String')
     return val
   except KeyError:
     if (defaultValue == None):
-      raise getInvalidEnvVarParamaterException(envVarName)
+      raise getInvalidEnvVarParamaterException(envVarName, None, 'Enviroment variable not set and no default')
     return defaultValue
 
 # class to store GlobalParmaters
