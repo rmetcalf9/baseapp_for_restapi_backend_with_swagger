@@ -215,3 +215,8 @@ class test_GlobalParamaters(testHelperSuperClass):
     with self.assertRaises(Exception) as context:
       gp = GlobalParamatersClass(env)
     self.checkGotRightException(context,getInvalidEnvVarParamaterException('APIAPP_PORT'))
+
+  def test_ExceptionsMatchEvneWithDifferentMessages(self):
+    expA = getInvalidEnvVarParamaterException('APIAPP_PORT')
+    expB = getInvalidEnvVarParamaterException('APIAPP_PORT',messageOverride='TEST')
+    self.assertEqual(expA, expB)
