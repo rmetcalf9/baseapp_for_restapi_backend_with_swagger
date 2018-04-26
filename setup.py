@@ -26,4 +26,5 @@ setup(name='baseapp_for_restapi_backend_with_swagger',
       packages=['baseapp_for_restapi_backend_with_swagger'],
       zip_safe=False,
       install_requires=sp_install_requires,
-      tests_require=sp_tests_require)
+      tests_require=sp_tests_require,
+      include_package_data=True)
