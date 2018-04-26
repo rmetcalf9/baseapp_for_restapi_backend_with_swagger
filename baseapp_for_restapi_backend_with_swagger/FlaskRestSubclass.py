@@ -81,7 +81,7 @@ class FlaskRestSubclass(Api):
           static_folder='static',
           static_url_path='/swaggerui',
       )
-      print('Registering for ' + doc)
+      # Registering internal function for use in templates
       self.localApiDoc.add_app_template_global(self.get_swagger_static_internal_path, name='swagger_static')
 
   #I don't want documentation to be registered here so overriding      
@@ -106,7 +106,6 @@ class FlaskRestSubclass(Api):
       self.localApiDoc.add_url_rule('/', 'doc', self.render_doc)  #Register / will become /apidocs/
       
       app_or_blueprint.add_url_rule('/swagger.json', 'spec_api', self.getSwaggerJSON) #Register / will become /apis/swagger.json
-      print('RRR')
       
       app.register_blueprint(self.localApiDoc, url_prefix=locToRegister)
       
