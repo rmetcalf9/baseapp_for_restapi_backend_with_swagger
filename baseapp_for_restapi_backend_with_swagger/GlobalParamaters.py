@@ -60,9 +60,9 @@ class GlobalParamatersClass():
 
     if (self.webfrontendpath != '_'):
       if (not os.path.isdir(self.webfrontendpath)):
-        raise getInvalidEnvVarParamaterException('APIAPP_FRONTEND')
+        raise getInvalidEnvVarParamaterException('APIAPP_FRONTEND', actualValue=self.webfrontendpath, messageOverride='Frontend directory doesn\'t exist')
     if (len(self.version) == 0):
-      raise getInvalidEnvVarParamaterException('APIAPP_VERSION')
+      raise getInvalidEnvVarParamaterException('APIAPP_VERSION', actualValue=self.version, messageOverride='Version length can\'t be zero')
 
     #JSONDecodeError only availiable in python 3.5 and up
     errToCatch = ValueError

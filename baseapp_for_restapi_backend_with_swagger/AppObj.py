@@ -12,7 +12,7 @@ from .webfrontendAPI import webfrontendBP, registerAPI as registerWebFrontendAPI
 
 
 
-class appObj():
+class AppObjBaseClass():
   appData = {}
   # Implemented in my own init
   #def __init__(self):
@@ -33,7 +33,7 @@ class appObj():
   flaskAppObject = None
   flastRestPlusAPIObject = None
   globalParamObject = None
-
+  
   # called by app.py to run the application
   def run(self):
     if (self.isInitOnce == False):
@@ -48,7 +48,7 @@ class appObj():
       print("Stopped")
 
   isInitOnce = False
-  def init(self, envirom):
+  def init(self, envirom, testingMode = False):
     self.appData = {}
     self.globalParamObject = GlobalParamatersClass(envirom)
     if (self.isInitOnce):

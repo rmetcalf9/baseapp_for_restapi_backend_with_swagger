@@ -8,7 +8,7 @@
     :license: MIT, see LICENSE for more details.
 """
 
-from .AppObj import appObj
+from .AppObj import AppObjBaseClass
 from .utils import from_iso8601
 from .GlobalParamaters import GlobalParamatersClass, getInvalidEnvVarParamaterException, readFromEnviroment
 from .FlaskRestSubclass import FlaskRestSubclass
