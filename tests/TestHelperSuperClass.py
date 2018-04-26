@@ -19,6 +19,8 @@ env = {
   'APIAPP_GROUPFORJOBS': 'root',
   'APIAPP_SKIPUSERCHECK': True,
 }
+appObjGlobInst = AppObjBaseClass()
+appObjGlobInst.init(env, testingMode = True)
 
 class testHelperSuperClass(unittest.TestCase):
   def checkGotRightException(self, context, ExpectedException):
@@ -56,16 +58,16 @@ class testHelperSuperClass(unittest.TestCase):
 #helper class with setup for an APIClient
 class testHelperAPIClient(testHelperSuperClass):
   testClient = None
+  appObj = None
 
   def setUp(self):
+    global appObjGlobInst
     # curDatetime = datetime.datetime.now(pytz.utc)
     # for testing always pretend the server started at a set datetime
-    appObjIns = AppObjBaseClass()
-    appObjIns.init(env, testingMode = True)
-    self.testClient = appObj.flaskAppObject.test_client()
+    self.appObj = appObjGlobInst
+    self.testClient = self.appObj.flaskAppObject.test_client()
     self.testClient.testing = True 
   def tearDown(self):
-    appObj.stopThread()
     self.testClient = None
 
   def findRecord(self, params, name):

@@ -81,7 +81,7 @@ class test_AppObj(testHelperSuperClass):
     if total is None:
       total = len(inpData)
     request = mockRequest(requestVals)
-    res = baseapp_for_restapi_backend_with_swagger.appObj.getPaginatedResult(
+    res = baseapp_for_restapi_backend_with_swagger.AppObjBaseClass.getPaginatedResult(
       mockAppObj,
       inpData, 
       outputFN, 

@@ -9,20 +9,20 @@ class test_AppObjAPI(testHelperAPIClient):
     self.assertEqual(result.status_code, 200, msg='/apis/swagger.json for api not present')
     result = self.testClient.get('/apidocs/swagger.json')
     self.assertEqual(result.status_code, 200, msg='/apidocs/swagger.json for apidocs not present')
-    result = self.testClient.get('/ebos/GenderV1/swagger.json')
-    self.assertEqual(result.status_code, 200, msg='/ebos/GenderV1/swagger.json for Gender api not present')
-    result = self.testClient.get('/ebodocs/GenderV1/swagger.json')
-    self.assertEqual(result.status_code, 200, msg='/ebodocs/GenderV1/swagger.json for Gender apidocs not present')
-    result = self.testClient.get('/ebos/AnimalsV1/swagger.json')
-    self.assertEqual(result.status_code, 200, msg='/ebos/AnimalsV1/swagger.json for Animals api not present')
-    result = self.testClient.get('/ebodocs/AnimalsV1/swagger.json')
-    self.assertEqual(result.status_code, 200, msg='/ebodocs/AnimalsV1/swagger.json for Animals apidocs not present')
+
 
   def test_docsIndexesPresent(self):
+    #print("*********DEBUG RULE START*************")
+    #for rule in self.appObj.flaskAppObject.url_map.iter_rules():
+    #  print(rule)
+    #print("*********DEBUG RULE END*************")
+    
     #Tests all locations for swagger files
+    #  this verifys the templates
     result = self.testClient.get('/apidocs/')
     self.assertEqual(result.status_code, 200, msg='/apidocs/ not present')
-    result = self.testClient.get('/ebodocs/GenderV1/')
-    self.assertEqual(result.status_code, 200, msg='/ebodocs/GenderV1/ not present')
-    result = self.testClient.get('/ebodocs/AnimalsV1/')
-    self.assertEqual(result.status_code, 200, msg='/ebodocs/AnimalsV1/ not present')
+
+  def test_checkStatics(self):
+    result = self.testClient.get('/apidocs/swaggerui/bower/swagger-ui/dist/css/typography.css')
+    self.assertEqual(result.status_code, 200, msg='Could not find sample static')
+    

@@ -68,7 +68,10 @@ class AppObjBaseClass():
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
       return response
 
-    self.flastRestPlusAPIObject = FlaskRestSubclass(self.flaskAppObject, 
+    api_blueprint = Blueprint('api', __name__)
+
+      
+    self.flastRestPlusAPIObject = FlaskRestSubclass(api_blueprint, 
       version='UNSET', 
       title='DocJob Scheduling Server API',
       description='API for the DockJob scheduling server', 
@@ -82,7 +85,6 @@ class AppObjBaseClass():
       self.globalParamObject.getAPIPath()
     )
 
-    api_blueprint = Blueprint('api', __name__)
     self.flastRestPlusAPIObject.init_app(api_blueprint)  
 
     self.flaskAppObject.register_blueprint(api_blueprint, url_prefix='/api')
