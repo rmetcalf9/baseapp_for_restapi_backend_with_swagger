@@ -220,3 +220,16 @@ class test_GlobalParamaters(testHelperSuperClass):
     expA = getInvalidEnvVarParamaterException('APIAPP_PORT')
     expB = getInvalidEnvVarParamaterException('APIAPP_PORT',messageOverride='TEST')
     self.assertEqual(expA, expB)
+    
+  def test_apiURLcanNotEndWithASlash(self):
+    env = {
+      'APIAPP_MODE': 'DOCKER',
+      'APIAPP_VERSION': 'TEST-3.3.3',
+      'APIAPP_FRONTEND': self.appDir,
+      'APIAPP_APIURL': 'http://apiurlxxx:45/aa/bb/cc/',
+      'APIAPP_APIACCESSSECURITY': '[]',
+      'APIAPP_PORT': '3456',
+    }
+    with self.assertRaises(Exception) as context:
+      gp = GlobalParamatersClass(env)
+    self.checkGotRightException(context,getInvalidEnvVarParamaterException('APIAPP_APIURL'))

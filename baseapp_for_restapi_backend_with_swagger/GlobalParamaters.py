@@ -75,6 +75,17 @@ class GlobalParamatersClass():
       print('Invalid JSON for apiaccesssecurity - ' + apiaccesssecuritySTR)
       raise getInvalidEnvVarParamaterException('APIAPP_APIACCESSSECURITY')
 
+    self.ensureNotTerminatedWithASlash(self.apiurl, 'APIAPP_APIURL')
+    self.ensureNotTerminatedWithASlash(self.apidocsurl, 'APIAPP_APIDOCSURL')
+
+  def ensureNotTerminatedWithASlash(self, val, param):
+    if len(val)==0:
+      return
+    if val[-1:] != '/':
+      if val[-1:] != '\\':
+        return
+    raise getInvalidEnvVarParamaterException(param, actualValue=val, messageOverride='Should not end with a slash')
+    
   def getStartupOutput(self):
     r = 'Mode:' + self.mode + '\n'
     r += 'Version:' + self.version + '\n'
