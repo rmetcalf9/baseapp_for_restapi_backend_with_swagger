@@ -38,7 +38,6 @@ class AppObjBaseClass():
   def run(self):
     if (self.isInitOnce == False):
       raise Exception('Trying to run app without initing')
-    print(self.globalParamObject.getStartupOutput())
     self.flastRestPlusAPIObject.version = self.globalParamObject.version
 
     #appObj.flaskAppObject.config['SERVER_NAME'] = 'servername:123'
@@ -55,6 +54,7 @@ class AppObjBaseClass():
       return
     self.isInitOnce = True
     self.initOnce()
+    print(self.globalParamObject.getStartupOutput())
 
   def initOnce(self):
     self.flaskAppObject = Flask(__name__)
