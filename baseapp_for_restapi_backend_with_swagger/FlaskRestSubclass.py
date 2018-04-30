@@ -123,13 +123,10 @@ class FlaskRestSubclass(Api):
     res = render_template('swagger-ui.html', title=self.title, specs_url=self.specs_url)
     res = res.replace(self.complexReplaceString,self.APIDOCSPath)
 
-    print('ABC')
     regexp="\"https?:\/\/[a-zA-Z0\-9._]*(:[0-9]*)?" + self.internalAPIPath.replace("/","\/") + "\/swagger.json\""
     regexp="\"https?:\/\/[a-zA-Z0\-9._]*(:[0-9]*)?" + self.internalAPIDOCSPath.replace("/","\/") + "\/swagger.json\""
-    print(regexp)
     p = re.compile(regexp)
     res = p.sub("\"" + self.apidocsurl + "/swagger.json\"", res)
-    print('DEF')
     '''
     if (self.overrideAPIDOCSPath()):
       #print("About to replace")
