@@ -26,3 +26,17 @@ class test_AppObjAPI(testHelperAPIClient):
     result = self.testClient.get('/apidocs/swaggerui/bower/swagger-ui/dist/css/typography.css')
     self.assertEqual(result.status_code, 200, msg='Could not find sample static')
     
+
+  def test_apidocs_redirect_bad_URLs(self):
+    result = self.testClient.get('/apidocs')
+    self.assertEqual(result.status_code, 301)
+    self.assertEqual(result.headers['location'], 'http://apiurlxxx/apidocs/')
+
+    #/api/ is never registered so will never redirect badly
+    #result = self.testClient.get('/api')
+    #self.assertEqual(result.status_code, 301)
+    #self.assertEqual(result.headers['location'], 'http://localhost:3033/api/')
+
+    result = self.testClient.get('/frontend')
+    self.assertEqual(result.status_code, 301)
+    self.assertEqual(result.headers['location'], 'http://UNKNOWN.com/abc/frontend/')

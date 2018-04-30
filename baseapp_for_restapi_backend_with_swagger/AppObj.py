@@ -1,6 +1,7 @@
 
 from flask_restplus import fields
-from flask import Flask, Blueprint
+from flask import Flask, Blueprint, request
+from urllib.parse import urlparse
 import signal
 import functools
 #I need jobs to be stored in order so pagination works
@@ -9,6 +10,7 @@ from sortedcontainers import SortedDict
 from .GlobalParamaters import GlobalParamatersClass
 from .FlaskRestSubclass import FlaskRestSubclass
 from .webfrontendAPI import webfrontendBP, registerAPI as registerWebFrontendAPI
+
 
 
 
@@ -34,6 +36,23 @@ class AppObjBaseClass():
   flastRestPlusAPIObject = None
   globalParamObject = None
   
+  incorrectRedirectList = []
+
+  def registerRedirectCorrection(self, origUrlEnd, correctURL):
+    for t in self.incorrectRedirectList:
+      if t['origUrlEnd'] == origUrlEnd:
+        t['correctURL'] = correctURL
+        return
+    self.incorrectRedirectList.append({ 'origUrlEnd': origUrlEnd, 'correctURL': correctURL })
+    
+  def getCorrectPrefix(self, urlSTR):
+    url = urlparse(urlSTR)
+    for t in self.incorrectRedirectList:
+      if url.path[-len(t['origUrlEnd']):] == t['origUrlEnd']:
+        return t
+    return None
+
+  
   # called by app.py to run the application
   def run(self):
     if (self.isInitOnce == False):
@@ -58,10 +77,22 @@ class AppObjBaseClass():
 
   def initOnce(self):
     self.flaskAppObject = Flask(__name__)
+    self.registerRedirectCorrection('/api', self.globalParamObject.apiurl)
+    self.registerRedirectCorrection('/apidocs', self.globalParamObject.apidocsurl)
+    self.registerRedirectCorrection('/frontend', 'http://UNKNOWN.com/abc/frontend')
 
     #Development code required to add CORS allowance in developer mode
     @self.flaskAppObject.after_request
     def after_request(response):
+      # Standard flask redirects will ignore our paramaters and use internal urls
+      # this is required to change them to the correct external url
+      if response.status_code == 301:
+        #print("location Header:" + response.headers['location'])
+        #print(request.url)
+        correctPrefix = self.getCorrectPrefix(request.url)
+        if correctPrefix is not None:
+          response.headers['location'] = correctPrefix['correctURL'] + '/'
+          print("corrected location Header:" + response.headers['location'])
       if (self.globalParamObject.getDeveloperMode()):
         response.headers.add('Access-Control-Allow-Origin', '*')
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')

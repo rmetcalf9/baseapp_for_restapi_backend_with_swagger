@@ -14,6 +14,7 @@ env = {
   'APIAPP_VERSION': 'TEST-3.3.3',
   'APIAPP_FRONTEND': '.',
   'APIAPP_APIURL': 'http://apiurlxxx',
+  'APIAPP_APIDOCSURL': 'http://apiurlxxx/apidocs',
   'APIAPP_APIACCESSSECURITY': '[{ "type": "basic-auth" }]',
   'APIAPP_USERFORJOBS': 'root',
   'APIAPP_GROUPFORJOBS': 'root',
