@@ -26,8 +26,9 @@ def removeTrailingSlash(str):
 # I need to subclass this in order to change the url_prefix for swaggerui
 #  so I can reverse proxy everything under /apidocs
 class FlaskRestSubclass(Api):
-  internalAPIPath = '/api'
-  internalAPIDOCSPath = '/apidocs'
+  internal_apidoc_prefix='/apidocs'
+  internal_api_prefix='/api'
+  internal_frontend_prefix='/frontend'
   
   complexReplaceString='dFDHf..kh543rrgefb..546t3rq54'
 
@@ -42,11 +43,15 @@ class FlaskRestSubclass(Api):
   APIPath = None
   localApiDoc = None
   
-  def setExtraParams(self, apidocsurl, APIDOCSPath, overrideAPIDOCSPath, APIPath):
+  def setExtraParams(self, apidocsurl, APIDOCSPath, overrideAPIDOCSPath, APIPath,internal_apidoc_prefix = '/apidocs',internal_api_prefix = '/api',internal_frontend_prefix = '/frontend'):
     self.apidocsurl = apidocsurl
     self.APIDOCSPath = APIDOCSPath
     self.overrideAPIDOCSPath = overrideAPIDOCSPath
     self.APIPath = APIPath
+    self.internal_apidoc_prefix=internal_apidoc_prefix
+    self.internal_api_prefix=internal_api_prefix
+    self.internal_frontend_prefix=internal_frontend_prefix
+
 
 
   def __init__(self, *args, reverse=False, **kwargs):
@@ -123,8 +128,8 @@ class FlaskRestSubclass(Api):
     res = render_template('swagger-ui.html', title=self.title, specs_url=self.specs_url)
     res = res.replace(self.complexReplaceString,self.APIDOCSPath)
 
-    regexp="\"https?:\/\/[a-zA-Z0\-9._]*(:[0-9]*)?" + self.internalAPIPath.replace("/","\/") + "\/swagger.json\""
-    regexp="\"https?:\/\/[a-zA-Z0\-9._]*(:[0-9]*)?" + self.internalAPIDOCSPath.replace("/","\/") + "\/swagger.json\""
+    regexp="\"https?:\/\/[a-zA-Z0\-9._]*(:[0-9]*)?" + self.internal_api_prefix.replace("/","\/") + "\/swagger.json\""
+    regexp="\"https?:\/\/[a-zA-Z0\-9._]*(:[0-9]*)?" + self.internal_apidoc_prefix.replace("/","\/") + "\/swagger.json\""
     p = re.compile(regexp)
     res = p.sub("\"" + self.apidocsurl + "/swagger.json\"", res)
     '''

@@ -21,8 +21,17 @@ APIPath = None
 
 class test_FlaskRestSubclass(unittest.TestCase):
  
-    def test(self):
-      pass
+    def test_normalSwaggerFile(self):
+      sc = FlaskRestSubclass(doc='Inp_doc')
+      sc.setExtraParams(
+        apidocsurl='FFFAPIDOCSURL', 
+        APIDOCSPath='GGGAPIDOCSPath', 
+        overrideAPIDOCSPath='XXXoverrideAPIDOCSPath', 
+        APIPath='HGFAPIPath'
+      )
+      #python_doc = sc.render_doc()
+      #print(python_doc)
+      #self.assertTrue(False)
 
 
 

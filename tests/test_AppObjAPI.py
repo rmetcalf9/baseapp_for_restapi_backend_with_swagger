@@ -1,5 +1,58 @@
 from baseapp_for_restapi_backend_with_swagger import FlaskRestSubclass
 from TestHelperSuperClass import testHelperAPIClient
+from baseapp_for_restapi_backend_with_swagger.AppObj import AppObjBaseClass
+
+from flask_restplus import fields
+from flask import Flask, Blueprint, request
+
+
+nonstandardEnv = {
+  'APIAPP_MODE': 'DOCKER',
+  'APIAPP_VERSION': 'TEST-3.3.3',
+  'APIAPP_FRONTEND': '.',
+  'APIAPP_APIURL': 'http://apiurlxxx',
+  'APIAPP_APIDOCSURL': 'http://apiurlxxx/apidocs',
+  'APIAPP_APIACCESSSECURITY': '[{ "type": "basic-auth" }]',
+  'APIAPP_USERFORJOBS': 'root',
+  'APIAPP_GROUPFORJOBS': 'root',
+  'APIAPP_SKIPUSERCHECK': True,
+}
+class otherAppObjClass(AppObjBaseClass):
+  def initOnce(self):
+    internal_apidoc_prefix = '/nonstandard/apidocs'
+    internal_api_prefix = '/nonstandard/api'
+    internal_frontend_prefix = '/nonstandard/frontend'
+
+    self.flaskAppObject = Flask(__name__)
+    self.registerRedirectCorrection('/api', self.globalParamObject.apiurl)
+    self.registerRedirectCorrection('/apidocs', self.globalParamObject.apidocsurl)
+    self.registerRedirectCorrection('/frontend', 'http://UNKNOWN.com/abc/frontend')
+    api_blueprint = Blueprint('api', __name__)
+
+    self.flastRestPlusAPIObject = FlaskRestSubclass(api_blueprint, 
+      version='UNSET', 
+      title='DocJob Scheduling Server API',
+      description='API for the DockJob scheduling server', 
+      doc=internal_apidoc_prefix + '/',
+      default_mediatype='application/json'
+    )
+    self.flastRestPlusAPIObject.setExtraParams(
+      self.globalParamObject.apidocsurl, 
+      self.globalParamObject.getAPIDOCSPath(), 
+      self.globalParamObject.overrideAPIDOCSPath, 
+      self.globalParamObject.getAPIPath(),
+      internal_apidoc_prefix=internal_apidoc_prefix,
+      internal_api_prefix=internal_api_prefix,
+      internal_frontend_prefix=internal_frontend_prefix
+    )
+
+    self.flastRestPlusAPIObject.init_app(api_blueprint)  
+
+    self.flaskAppObject.register_blueprint(api_blueprint, url_prefix=internal_api_prefix)
+    #registerWebFrontendAPI(self)
+    #self.flaskAppObject.register_blueprint(webfrontendBP, url_prefix=internal_frontend_prefix)
+
+
 
 class test_AppObjAPI(testHelperAPIClient):
 
@@ -47,3 +100,17 @@ class test_AppObjAPI(testHelperAPIClient):
     idx_file = result.get_data(as_text=True)
     ## print(idx_file)
     self.assertNotEqual(idx_file.find('http://apiurlxxx/apidocs/swagger.json'),-1,msg='Could not find correct url for swagger.json in index')
+
+  def test_indexHasCorrectSwaggerWhenUsingNonDefaultLocations(self):
+    self.appObj = otherAppObjClass()
+    self.appObj.init(nonstandardEnv, testingMode = True)
+    self.testClient = self.appObj.flaskAppObject.test_client()
+    self.testClient.testing = True 
+
+    result = self.testClient.get('/nonstandard/apidocs/')
+    self.assertEqual(result.status_code, 200, msg='/nonstandard/apidocs/index.html from apidocs not present')
+    idx_file = result.get_data(as_text=True)
+    print(idx_file)
+    self.assertNotEqual(idx_file.find('http://apiurlxxx/apidocs/swagger.json'),-1,msg='Could not find correct url for swagger.json in index')
+
+

@@ -101,12 +101,15 @@ class AppObjBaseClass():
 
     api_blueprint = Blueprint('api', __name__)
 
-      
+    internal_apidoc_prefix = '/apidocs'
+    internal_api_prefix = '/api'
+    internal_frontend_prefix = '/frontend'
+
     self.flastRestPlusAPIObject = FlaskRestSubclass(api_blueprint, 
       version='UNSET', 
       title='DocJob Scheduling Server API',
       description='API for the DockJob scheduling server', 
-      doc='/apidocs/',
+      doc=internal_apidoc_prefix + '/',
       default_mediatype='application/json'
     )
     self.flastRestPlusAPIObject.setExtraParams(
@@ -118,9 +121,9 @@ class AppObjBaseClass():
 
     self.flastRestPlusAPIObject.init_app(api_blueprint)  
 
-    self.flaskAppObject.register_blueprint(api_blueprint, url_prefix='/api')
+    self.flaskAppObject.register_blueprint(api_blueprint, url_prefix=internal_api_prefix)
     registerWebFrontendAPI(self)
-    self.flaskAppObject.register_blueprint(webfrontendBP, url_prefix='/frontend')
+    self.flaskAppObject.register_blueprint(webfrontendBP, url_prefix=internal_frontend_prefix)
 
     signal.signal(signal.SIGINT, self.exit_gracefully)
     signal.signal(signal.SIGTERM, self.exit_gracefully) #sigterm is sent by docker stop command
