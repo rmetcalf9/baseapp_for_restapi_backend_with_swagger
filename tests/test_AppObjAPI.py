@@ -40,3 +40,10 @@ class test_AppObjAPI(testHelperAPIClient):
     result = self.testClient.get('/frontend')
     self.assertEqual(result.status_code, 301)
     self.assertEqual(result.headers['location'], 'http://UNKNOWN.com/abc/frontend/')
+
+  def test_indexPointsToCorrectSwaggerJSON(self):
+    result = self.testClient.get('/apidocs/')
+    self.assertEqual(result.status_code, 200, msg='/apidocs/index.html from apidocs not present')
+    idx_file = result.get_data(as_text=True)
+    ## print(idx_file)
+    self.assertNotEqual(idx_file.find('http://apiurlxxx/apidocs/swagger.json'),-1,msg='Could not find correct url for swagger.json in index')
