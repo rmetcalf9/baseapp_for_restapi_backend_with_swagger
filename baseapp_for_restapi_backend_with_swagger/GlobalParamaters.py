@@ -44,6 +44,7 @@ class GlobalParamatersClass():
   apidocsurl = None
   apiaccesssecurity = None
   APIAPP_PORT = None
+  APIAPP_FRONTENDURL = None
   
   def __init__(self, env):
     self.mode = readFromEnviroment(env, 'APIAPP_MODE', None, ['DEVELOPER','DOCKER'])
@@ -57,6 +58,7 @@ class GlobalParamatersClass():
       self.APIAPP_PORT = int(APIAPP_PORTSTR)
     except:
       raise getInvalidEnvVarParamaterException('APIAPP_PORT', actualValue=APIAPP_PORTSTR, messageOverride='Port must be a number')
+    self.APIAPP_FRONTENDURL = readFromEnviroment(env, 'APIAPP_FRONTENDURL', 'http://UNKNOWN.com/abc/frontend', None)
 
     if (self.webfrontendpath != '_'):
       if (not os.path.isdir(self.webfrontendpath)):

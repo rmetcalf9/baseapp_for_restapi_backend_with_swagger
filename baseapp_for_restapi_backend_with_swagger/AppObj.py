@@ -79,7 +79,7 @@ class AppObjBaseClass():
     self.flaskAppObject = Flask(__name__)
     self.registerRedirectCorrection('/api', self.globalParamObject.apiurl)
     self.registerRedirectCorrection('/apidocs', self.globalParamObject.apidocsurl)
-    self.registerRedirectCorrection('/frontend', 'http://UNKNOWN.com/abc/frontend')
+    self.registerRedirectCorrection('/frontend', self.globalParamObject.APIAPP_FRONTENDURL)
 
     #Development code required to add CORS allowance in developer mode
     @self.flaskAppObject.after_request
