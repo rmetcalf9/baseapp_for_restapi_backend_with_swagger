@@ -4,7 +4,7 @@ import versioneer
 #Dependancy lists maintained here and in tox.ini
 sp_install_requires = [
   'pytz==2018.4',
-  'flask==0.12.2',
+  'flask==1.0.2',
   'flask_restplus==0.10.1',
   'python-dateutil==2.7.2',
   'sortedcontainers==1.5.9'
