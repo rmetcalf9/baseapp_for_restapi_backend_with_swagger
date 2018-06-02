@@ -54,14 +54,14 @@ class AppObjBaseClass():
 
   
   # called by app.py to run the application
-  def run(self):
+  def run(self, custom_request_handler=None):
     if (self.isInitOnce == False):
       raise Exception('Trying to run app without initing')
     self.flastRestPlusAPIObject.version = self.globalParamObject.version
 
     #appObj.flaskAppObject.config['SERVER_NAME'] = 'servername:123'
     try:
-      self.flaskAppObject.run(host='0.0.0.0', port=self.globalParamObject.APIAPP_PORT, debug=False)
+      self.flaskAppObject.run(host='0.0.0.0', port=self.globalParamObject.APIAPP_PORT, debug=False, custom_request_handler=request_handler)
     except self.ServerTerminationError as e:
       print("Stopped")
 
