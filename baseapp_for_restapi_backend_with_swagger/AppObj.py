@@ -57,7 +57,6 @@ class AppObjBaseClass():
   def run(self, custom_request_handler=None):
     if (self.isInitOnce == False):
       raise Exception('Trying to run app without initing')
-    self.flastRestPlusAPIObject.version = self.globalParamObject.version
 
     #appObj.flaskAppObject.config['SERVER_NAME'] = 'servername:123'
     try:
@@ -124,6 +123,8 @@ class AppObjBaseClass():
     self.flaskAppObject.register_blueprint(api_blueprint, url_prefix=internal_api_prefix)
     registerWebFrontendAPI(self)
     self.flaskAppObject.register_blueprint(webfrontendBP, url_prefix=internal_frontend_prefix)
+
+    self.flastRestPlusAPIObject.version = self.globalParamObject.version
 
     signal.signal(signal.SIGINT, self.exit_gracefully)
     signal.signal(signal.SIGTERM, self.exit_gracefully) #sigterm is sent by docker stop command
