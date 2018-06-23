@@ -76,7 +76,9 @@ class test_AppObjAPI(testHelperAPIClient):
     self.assertEqual(result.status_code, 200, msg='/apidocs/ not present')
 
   def test_checkStatics(self):
-    result = self.testClient.get('/apidocs/swaggerui/bower/swagger-ui/dist/css/typography.css')
+    #result = self.testClient.get('/apidocs/swaggerui/bower/swagger-ui/dist/css/typography.css')
+    result = self.testClient.get('/apidocs/swaggerui/bower/swagger-ui/dist/swagger-ui.js')
+
     self.assertEqual(result.status_code, 200, msg='Could not find sample static')
     
 

@@ -5,7 +5,7 @@ import versioneer
 sp_install_requires = [
   'pytz==2018.4',
   'flask==1.0.2',
-  'flask_restplus==0.10.1',
+  'flask_restplus==0.11.0',
   'python-dateutil==2.7.2',
   'sortedcontainers==1.5.9'
 ]
