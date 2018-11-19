@@ -21,7 +21,7 @@ if [[ `${CMD_GIT} status --porcelain` ]]; then
   exit 1
 fi
 
-VERSIONFILE=${GITROOT}/server/VERSION
+VERSIONFILE=${GITROOT}/VERSION
 cd ${START_DIR}
 ./bumpVersion.sh ${VERSIONFILE}
 RES=$?
@@ -34,7 +34,7 @@ fi
 VERSIONNUM=$(cat ${VERSIONFILE})
 
 # must build AFTER the version is bumped as the version file is imported to the image
-cd ${GITROOT}/server
+cd ${GITROOT}
 eval ${CMD_DOCKER} build . -t ${DOCKER_USERNAME}/${DOCKER_IMAGENAME}:latest
 RES=$?
 if [ ${RES} -ne 0 ]; then
