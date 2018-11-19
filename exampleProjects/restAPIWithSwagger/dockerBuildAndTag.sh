@@ -10,8 +10,8 @@ export CMD_GIT=git
 
 
 
-DOCKER_USERNAME=TODOENTER
-DOCKER_IMAGENAME=TODOENTER
+DOCKER_USERNAME=todoenter
+DOCKER_IMAGENAME=todoenter
 cd ${GITROOT}
 
 echo "Ensuring there are no local changes"
