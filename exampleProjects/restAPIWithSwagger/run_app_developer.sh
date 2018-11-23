@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [ E${EXTURL} = "E" ]; then
-  echo "EXTURL not set"
+  echo "EXTURL not set - Set it to something like 'http://mymachinehostname'"
   exit 1
 fi
 if [ E${EXTPORT} = "E" ]; then
-  echo "EXTPORT not set"
+  echo "EXTPORT not set - Set it to something like '8098'"
   exit 1
 fi
 
