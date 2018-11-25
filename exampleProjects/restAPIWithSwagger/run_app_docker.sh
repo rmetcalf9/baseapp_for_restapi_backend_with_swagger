@@ -37,7 +37,7 @@ for i in ${AA}; do
   if [ ! -f ${FILETOREAD} ]; then
     echo "ERROR ${FILETOREAD} dosen't exist - continuing without setting env variable"
   else
-    eval ${NEWVARNAME}=$(cat ${FILETOREAD})
+    eval export ${NEWVARNAME}=$(cat ${FILETOREAD})
   fi
   #Check lines
   #RES=$(eval echo \$${NEWVARNAME})
