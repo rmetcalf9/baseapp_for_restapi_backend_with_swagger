@@ -165,4 +165,5 @@ class FlaskRestSubclass(Api):
       The Swagger specifications absolute url (ie. `swagger.json`)
       :rtype: str
       '''
-      return url_for('restplus_doc_' + self._doc + '.spec', _external=True)
+      #return url_for('restplus_doc_' + self._doc + '.spec', _external=True)
+      return self.apidocsurl + '/swagger.json'
