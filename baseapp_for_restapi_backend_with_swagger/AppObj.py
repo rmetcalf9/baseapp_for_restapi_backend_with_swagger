@@ -81,6 +81,8 @@ class AppObjBaseClass():
     self.registerRedirectCorrection('/frontend', self.globalParamObject.APIAPP_FRONTENDURL)
 
     #Development code required to add CORS allowance in developer mode
+    # - in prod mode services and web app are behind a reverse proxy and so no CORS security is triggered
+    # - in dev mode serivces are run locally on developer machine possible on different ports etc.
     @self.flaskAppObject.after_request
     def after_request(response):
       # Standard flask redirects will ignore our paramaters and use internal urls
@@ -94,7 +96,7 @@ class AppObjBaseClass():
           print("corrected location Header:" + response.headers['location'])
       if (self.globalParamObject.getDeveloperMode()):
         response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Headers', '*')
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
       return response
 
