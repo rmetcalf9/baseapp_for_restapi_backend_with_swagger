@@ -33,10 +33,11 @@ def readFromEnviroment(env, envVarName, defaultValue, acceptableValues, nullValu
   val = None
   if envVarName not in env:
     if envVarName.startswith("APIAPP_"):
-      if envVarName + "_FILE" in env:
-        if not os.path.isfile(env[envVarName + "_FILE"]):
-          raise getMissingVarFileException(envVarName, env[envVarName + "_FILE"])
-        with open(env[envVarName + "_FILE"], 'r') as file:
+      if envVarName + "FILE" in env:
+        print("Reading param from file for " + envVarName)
+        if not os.path.isfile(env[envVarName + "FILE"]):
+          raise getMissingVarFileException(envVarName, env[envVarName + "FILE"])
+        with open(env[envVarName + "FILE"], 'r') as file:
             val = file.read()
   if val is None:
     try:

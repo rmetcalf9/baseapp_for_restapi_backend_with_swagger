@@ -242,7 +242,7 @@ class test_GlobalParamaters(testHelperSuperClass):
       'APIAPP_APIURL': 'http://apiurlxxx:45/aa/bb/cc',
       'APIAPP_APIACCESSSECURITY': '[]',
       'APIAPP_PORT': '3456',
-      'APIAPP_SOMESTRINGFROMFILEXX_FILE': './tests/envSingle'
+      'APIAPP_SOMESTRINGFROMFILEXXFILE': './tests/envSingle'
     }
     self.assertEqual(readFromEnviroment(env, "APIAPP_SOMESTRINGFROMFILEXX", None, None, False),"Example Single Line Env File\n",msg="Wrong value read from file")
     
@@ -254,7 +254,7 @@ class test_GlobalParamaters(testHelperSuperClass):
       'APIAPP_APIURL': 'http://apiurlxxx:45/aa/bb/cc',
       'APIAPP_APIACCESSSECURITY': '[]',
       'APIAPP_PORT': '3456',
-      'APIAPP_SOMESTRINGFROMFILEXX_FILE': '/a/b/c'
+      'APIAPP_SOMESTRINGFROMFILEXXFILE': '/a/b/c'
     }
     with self.assertRaises(Exception) as context:
       self.assertEqual(readFromEnviroment(env, "APIAPP_SOMESTRINGFROMFILEXX", None, None, False))
@@ -268,7 +268,7 @@ class test_GlobalParamaters(testHelperSuperClass):
       'APIAPP_APIURL': 'http://apiurlxxx:45/aa/bb/cc',
       'APIAPP_APIACCESSSECURITY': '[]',
       'APIAPP_PORT': '3456',
-      'APIAPP_SOMESTRINGFROMFILEXX_FILE': './tests/envSomeJSON'
+      'APIAPP_SOMESTRINGFROMFILEXXFILE': './tests/envSomeJSON'
     }
     self.assertEqual(readFromEnviroment(env, "APIAPP_SOMESTRINGFROMFILEXX", None, None, False),'{"Type": "SQLAlchemy","connectionString":"mysql+pymysql://dsafdsa:aaa@saddsa.eu-west-2.rds.amazonaws.com/dsffds","ssl_ca": "/rds-combined-ca-bundle.pem"}',msg="Wrong value read from file")
   
@@ -280,7 +280,7 @@ class test_GlobalParamaters(testHelperSuperClass):
       'APIAPP_APIURL': 'http://apiurlxxx:45/aa/bb/cc',
       'APIAPP_APIACCESSSECURITY': '[]',
       'APIAPP_PORT': '3456',
-      'APIAPP_SOMESTRINGFROMFILEXX_FILE': './tests/envMultiLine'
+      'APIAPP_SOMESTRINGFROMFILEXXFILE': './tests/envMultiLine'
     }
     self.assertEqual(readFromEnviroment(env, "APIAPP_SOMESTRINGFROMFILEXX", None, None, False),"Example Multi Line Env File\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\n",msg="Wrong value read from file")
     

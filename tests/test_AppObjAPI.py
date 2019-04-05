@@ -84,7 +84,8 @@ class test_AppObjAPI(testHelperAPIClient):
 
   def test_apidocs_redirect_bad_URLs(self):
     result = self.testClient.get('/apidocs')
-    self.assertEqual(result.status_code, 301)
+    if (result.status_code != 301):
+      self.assertEqual(result.status_code, 308, msg="return code should be 301 or 308")
     self.assertEqual(result.headers['location'], 'http://apiurlxxx/apidocs/')
 
     #/api/ is never registered so will never redirect badly
@@ -93,7 +94,8 @@ class test_AppObjAPI(testHelperAPIClient):
     #self.assertEqual(result.headers['location'], 'http://localhost:3033/api/')
 
     result = self.testClient.get('/frontend')
-    self.assertEqual(result.status_code, 301)
+    if (result.status_code != 301):
+      self.assertEqual(result.status_code, 308, msg="return code should be 301 or 308")
     self.assertEqual(result.headers['location'], 'http://UNKNOWN.com/abc/frontend/')
 
   def test_indexPointsToCorrectSwaggerJSON(self):
