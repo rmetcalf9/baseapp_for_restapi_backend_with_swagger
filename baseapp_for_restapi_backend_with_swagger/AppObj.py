@@ -87,7 +87,7 @@ class AppObjBaseClass():
     def after_request(response):
       # Standard flask redirects will ignore our paramaters and use internal urls
       # this is required to change them to the correct external url
-      if response.status_code == 301:
+      if response.status_code in (301, 308):
         #print("location Header:" + response.headers['location'])
         #print(request.url)
         correctPrefix = self.getCorrectPrefix(request.url)

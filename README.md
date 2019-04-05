@@ -20,6 +20,9 @@ python3 setup.py register sdist upload
 git push --tags 
 ````
 
+If you get an error message reporting "dirty" versions can't be uploaded to pypi it means that you have uncommitted changes.
+
+
 # Information on building a python package
 
 https://www.youtube.com/watch?v=4fzAMdLKC5k
