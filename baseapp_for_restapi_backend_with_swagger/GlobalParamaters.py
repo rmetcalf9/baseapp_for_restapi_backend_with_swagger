@@ -8,7 +8,7 @@ def getInvalidEnvVarParamaterException(envVarName, actualValue=None, messageOver
   if envVarName not in exceptions:
     exceptions[envVarName] = InvalidEnvVarParamaterExecption(envVarName, actualValue, messageOverride)
   return exceptions[envVarName]
-
+  
 class InvalidEnvVarParamaterExecption(Exception):
   def __init__(self, envVarName, actualValue=None, messageOverride=None):
     message = 'Invalid value for'
@@ -19,22 +19,42 @@ class InvalidEnvVarParamaterExecption(Exception):
       message = message + ' got:' + actualValue
     super(InvalidEnvVarParamaterExecption, self).__init__(message)
 
+missingVarFileExceptions = dict()
+class MissingVarFileExceptionClass(Exception):
+  def __init__(self, envVarName, fileName):
+    super(MissingVarFileExceptionClass, self).__init__("Missing Enviroment File var=" + envVarName + " file=" + fileName)
+def getMissingVarFileException(envVarName, fileName):
+  if envVarName not in missingVarFileExceptions:
+    missingVarFileExceptions[envVarName] = MissingVarFileExceptionClass(envVarName, fileName)
+  return missingVarFileExceptions[envVarName]
+    
 #Read environment variable or raise an exception if it is missing and there is no default
 def readFromEnviroment(env, envVarName, defaultValue, acceptableValues, nullValueAllowed=False):
-  try:
-    val = env[envVarName]
-    if (acceptableValues != None):
-      if (val not in acceptableValues):
-        raise getInvalidEnvVarParamaterException(envVarName, val, 'Not an acceptable value')
-    if not nullValueAllowed:
-      if val == '':
-        raise getInvalidEnvVarParamaterException(envVarName, None, 'Null/Empty String')
-    return val
-  except KeyError:
-    if (defaultValue == None):
-      raise getInvalidEnvVarParamaterException(envVarName, None, 'Enviroment variable not set and no default')
-    return defaultValue
+  val = None
+  if envVarName not in env:
+    if envVarName.startswith("APIAPP_"):
+      if envVarName + "_FILE" in env:
+        if not os.path.isfile(env[envVarName + "_FILE"]):
+          raise getMissingVarFileException(envVarName, env[envVarName + "_FILE"])
+        with open(env[envVarName + "_FILE"], 'r') as file:
+            val = file.read()
+  if val is None:
+    try:
+      val = env[envVarName]
+    except KeyError:
+      if (defaultValue == None):
+        raise getInvalidEnvVarParamaterException(envVarName, None, 'Enviroment variable not set and no default')
+      return defaultValue
 
+  if (acceptableValues != None):
+    if (val not in acceptableValues):
+      raise getInvalidEnvVarParamaterException(envVarName, val, 'Not an acceptable value')
+  if not nullValueAllowed:
+    if val == '':
+      raise getInvalidEnvVarParamaterException(envVarName, None, 'Null/Empty String')
+  return val
+    
+    
 # class to store GlobalParmaters
 class GlobalParamatersClass():
   mode = None

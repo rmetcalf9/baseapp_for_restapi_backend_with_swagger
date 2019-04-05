@@ -1,0 +1,1 @@
+{"Type": "SQLAlchemy","connectionString":"mysql+pymysql://dsafdsa:aaa@saddsa.eu-west-2.rds.amazonaws.com/dsffds","ssl_ca": "/rds-combined-ca-bundle.pem"}

@@ -1,5 +1,5 @@
 from TestHelperSuperClass import testHelperSuperClass
-from baseapp_for_restapi_backend_with_swagger import GlobalParamatersClass, getInvalidEnvVarParamaterException
+from baseapp_for_restapi_backend_with_swagger import GlobalParamatersClass, getInvalidEnvVarParamaterException, readFromEnviroment, getMissingVarFileException
 import json
 ##import os
 
@@ -233,3 +233,57 @@ class test_GlobalParamaters(testHelperSuperClass):
     with self.assertRaises(Exception) as context:
       gp = GlobalParamatersClass(env)
     self.checkGotRightException(context,getInvalidEnvVarParamaterException('APIAPP_APIURL'))
+    
+  def test_readFromFile(self):
+    env = {
+      'APIAPP_MODE': 'DOCKER',
+      'APIAPP_VERSION': 'TEST-3.3.3',
+      'APIAPP_FRONTEND': self.appDir,
+      'APIAPP_APIURL': 'http://apiurlxxx:45/aa/bb/cc',
+      'APIAPP_APIACCESSSECURITY': '[]',
+      'APIAPP_PORT': '3456',
+      'APIAPP_SOMESTRINGFROMFILEXX_FILE': './tests/envSingle'
+    }
+    self.assertEqual(readFromEnviroment(env, "APIAPP_SOMESTRINGFROMFILEXX", None, None, False),"Example Single Line Env File\n",msg="Wrong value read from file")
+    
+  def test_readFromFileNotExisting(self):
+    env = {
+      'APIAPP_MODE': 'DOCKER',
+      'APIAPP_VERSION': 'TEST-3.3.3',
+      'APIAPP_FRONTEND': self.appDir,
+      'APIAPP_APIURL': 'http://apiurlxxx:45/aa/bb/cc',
+      'APIAPP_APIACCESSSECURITY': '[]',
+      'APIAPP_PORT': '3456',
+      'APIAPP_SOMESTRINGFROMFILEXX_FILE': '/a/b/c'
+    }
+    with self.assertRaises(Exception) as context:
+      self.assertEqual(readFromEnviroment(env, "APIAPP_SOMESTRINGFROMFILEXX", None, None, False))
+    self.checkGotRightException(context,getMissingVarFileException('APIAPP_SOMESTRINGFROMFILEXX','aa'))
+  
+  def test_readFromFileJSON(self):
+    env = {
+      'APIAPP_MODE': 'DOCKER',
+      'APIAPP_VERSION': 'TEST-3.3.3',
+      'APIAPP_FRONTEND': self.appDir,
+      'APIAPP_APIURL': 'http://apiurlxxx:45/aa/bb/cc',
+      'APIAPP_APIACCESSSECURITY': '[]',
+      'APIAPP_PORT': '3456',
+      'APIAPP_SOMESTRINGFROMFILEXX_FILE': './tests/envSomeJSON'
+    }
+    self.assertEqual(readFromEnviroment(env, "APIAPP_SOMESTRINGFROMFILEXX", None, None, False),'{"Type": "SQLAlchemy","connectionString":"mysql+pymysql://dsafdsa:aaa@saddsa.eu-west-2.rds.amazonaws.com/dsffds","ssl_ca": "/rds-combined-ca-bundle.pem"}',msg="Wrong value read from file")
+  
+  def test_readFromFileMultiLine(self):
+    env = {
+      'APIAPP_MODE': 'DOCKER',
+      'APIAPP_VERSION': 'TEST-3.3.3',
+      'APIAPP_FRONTEND': self.appDir,
+      'APIAPP_APIURL': 'http://apiurlxxx:45/aa/bb/cc',
+      'APIAPP_APIACCESSSECURITY': '[]',
+      'APIAPP_PORT': '3456',
+      'APIAPP_SOMESTRINGFROMFILEXX_FILE': './tests/envMultiLine'
+    }
+    self.assertEqual(readFromEnviroment(env, "APIAPP_SOMESTRINGFROMFILEXX", None, None, False),"Example Multi Line Env File\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\n",msg="Wrong value read from file")
+    
+  
+  #todo read multi line file
+  

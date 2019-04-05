@@ -10,7 +10,7 @@
 
 from .AppObj import AppObjBaseClass
 from .utils import from_iso8601
-from .GlobalParamaters import GlobalParamatersClass, getInvalidEnvVarParamaterException, readFromEnviroment
+from .GlobalParamaters import GlobalParamatersClass, getInvalidEnvVarParamaterException, readFromEnviroment, getMissingVarFileException
 from .FlaskRestSubclass import FlaskRestSubclass
 
 from ._version import get_versions
