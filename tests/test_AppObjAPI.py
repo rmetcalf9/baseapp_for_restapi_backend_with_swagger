@@ -107,7 +107,7 @@ class test_AppObjAPI(testHelperAPIClient):
 
   def test_indexHasCorrectSwaggerWhenUsingNonDefaultLocations(self):
     self.appObj = otherAppObjClass()
-    self.appObj.init(nonstandardEnv, testingMode = True)
+    self.appObj.init(nonstandardEnv, serverStartTime = None, testingMode = True)
     self.testClient = self.appObj.flaskAppObject.test_client()
     self.testClient.testing = True 
 

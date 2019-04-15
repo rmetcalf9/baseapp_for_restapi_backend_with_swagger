@@ -9,6 +9,7 @@
 """
 
 from .AppObj import AppObjBaseClass
+from .requestHelper import getPaginatedParamValues
 from .utils import from_iso8601
 from .GlobalParamaters import GlobalParamatersClass, getInvalidEnvVarParamaterException, readFromEnviroment, getMissingVarFileException
 from .FlaskRestSubclass import FlaskRestSubclass

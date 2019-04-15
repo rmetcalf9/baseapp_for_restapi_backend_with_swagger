@@ -6,12 +6,22 @@ import signal
 import functools
 #I need jobs to be stored in order so pagination works
 from sortedcontainers import SortedDict
+import bcrypt
+import datetime
+import pytz
 
-from .GlobalParamaters import GlobalParamatersClass
+from .GlobalParamaters import GlobalParamatersClass, readFromEnviroment
 from .FlaskRestSubclass import FlaskRestSubclass
 from .webfrontendAPI import webfrontendBP, registerAPI as registerWebFrontendAPI
 
-
+#Encryption operations make unit tests run slow
+# if app is in testing more this dummy class
+# skips the hashing stages (dosen't matter for unit tests)
+class testOnlybcrypt():
+  def gensalt():
+    return b'$2b$12$lXti32XD6LkwYUnLw.1vh.'
+  def hashpw(combo_password, salt):
+    return combo_password
 
 
 class AppObjBaseClass():
@@ -35,6 +45,11 @@ class AppObjBaseClass():
   flaskAppObject = None
   flastRestPlusAPIObject = None
   globalParamObject = None
+  bcrypt = bcrypt
+  curDateTimeOverrideForTesting = None
+  version = None
+  serverStartTime = None
+
   
   incorrectRedirectList = []
 
@@ -65,15 +80,26 @@ class AppObjBaseClass():
       print("Stopped")
 
   isInitOnce = False
-  def init(self, envirom, testingMode = False):
+  def init(self, envirom, serverStartTime, testingMode):
+    self.curDateTimeOverrideForTesting = None
+    self.serverStartTime = serverStartTime
+    if self.serverStartTime is None:
+      self.serverStartTime = datetime.datetime.now(pytz.utc)
+    
     self.appData = {}
     self.globalParamObject = GlobalParamatersClass(envirom)
+
+    self.version = readFromEnviroment(envirom, 'APIAPP_VERSION', None, None)
+    if testingMode:
+      print("Warning testing mode active - proper encryption is not being used")
+      self.bcrypt = testOnlybcrypt
+
     if (self.isInitOnce):
       return
     self.isInitOnce = True
     self.initOnce()
     print(self.globalParamObject.getStartupOutput())
-
+    
   def initOnce(self):
     self.flaskAppObject = Flask(__name__)
     self.registerRedirectCorrection('/api', self.globalParamObject.apiurl)
@@ -251,3 +277,11 @@ class AppObjBaseClass():
           return funct(*args, **kwargs)
       return _
     return addStandardSortParamsDec
+
+  def setTestingDateTime(self, val):
+    self.curDateTimeOverrideForTesting = val
+  def getCurDateTime(self):
+    if self.curDateTimeOverrideForTesting is None:
+      return datetime.datetime.now(pytz.timezone("UTC"))
+    return self.curDateTimeOverrideForTesting
+

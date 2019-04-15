@@ -21,7 +21,7 @@ env = {
   'APIAPP_SKIPUSERCHECK': True,
 }
 appObjGlobInst = AppObjBaseClass()
-appObjGlobInst.init(env, testingMode = True)
+appObjGlobInst.init(env, serverStartTime=None, testingMode = True)
 
 class testHelperSuperClass(unittest.TestCase):
   def checkGotRightException(self, context, ExpectedException):
