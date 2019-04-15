@@ -1,20 +1,24 @@
 
-# Will not put here
-schedular - not being made common
 
 
 # Made Common
+
+# TODO Split 
+Split API into API and authedAPI
+
+# In Future:
+serverInfoAPI???
+
+
+
+# DONE
 getPaginatedParamValues
 bcrypt
 setTestingDateTime/getCurDateTime
 APIAPP_VERSION
 serverStartTime
-
-
-# Hard to do as gateway keeps the token secret:
-(Need to refactor first)
 apiSecurity
-jwtTokenGeneration
+ - jwtTokenGeneration ONLY DECODE MOVED TO API SECURITY
 
-# In Future:
-serverInfoAPI???
+# Will not put here
+schedular - not being made common

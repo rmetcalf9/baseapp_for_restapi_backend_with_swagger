@@ -14,6 +14,10 @@ from .GlobalParamaters import GlobalParamatersClass, readFromEnviroment
 from .FlaskRestSubclass import FlaskRestSubclass
 from .webfrontendAPI import webfrontendBP, registerAPI as registerWebFrontendAPI
 
+from .apiSecurity import apiSecurityCheck
+from base64 import b64encode
+
+
 #Encryption operations make unit tests run slow
 # if app is in testing more this dummy class
 # skips the hashing stages (dosen't matter for unit tests)
@@ -49,6 +53,7 @@ class AppObjBaseClass():
   curDateTimeOverrideForTesting = None
   version = None
   serverStartTime = None
+  APIAPP_JWTSECRET = None
 
   
   incorrectRedirectList = []
@@ -85,6 +90,16 @@ class AppObjBaseClass():
     self.serverStartTime = serverStartTime
     if self.serverStartTime is None:
       self.serverStartTime = datetime.datetime.now(pytz.utc)
+    
+    self.APIAPP_JWTSECRET = readFromEnviroment(envirom, 'APIAPP_JWTSECRET', 'NOSECRETSET435gtvsfd5etrfc4resferfe', None).strip()
+    if self.APIAPP_JWTSECRET == 'NOSECRETSET435gtvsfd5etrfc4resferfe':
+      #random_secret_str = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
+      #self.jwtSecret = b64encode(random_secret_str.encode("utf-8"))
+      self.APIAPP_JWTSECRET = None
+    else:
+      #base64 encode incomming secret string
+      self.APIAPP_JWTSECRET = b64encode(self.APIAPP_JWTSECRET.encode("utf-8"))
+    
     
     self.appData = {}
     self.globalParamObject = GlobalParamatersClass(envirom)
@@ -284,4 +299,8 @@ class AppObjBaseClass():
     if self.curDateTimeOverrideForTesting is None:
       return datetime.datetime.now(pytz.timezone("UTC"))
     return self.curDateTimeOverrideForTesting
+
+  def apiSecurityCheck(self, request, tenant, requiredRoleList, headersToSearch, cookiesToSearch):
+    return apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, self.APIAPP_JWTSECRET)
+
 
