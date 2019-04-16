@@ -25,19 +25,37 @@ def _getFromLoginCookie(request, cookies):
         pass
   return None
 
+def getTokenFromAuthorizationHeader(request, jwtSecret):
+  if 'Authorization' not in request.headers:
+    return None
+  a = request.headers.get('Authorization')
+  if not a.startswith('Bearer '):
+    return None
+  a = a[7:].strip()
+  try:
+    decodedJWTToken = DecodedTokenClass(jwtSecret, a)
+  except:
+    return None
+  return a
+    
+  
+  
 def _getFromNormCookie(request, cookies):
   for c in cookies:
     if c in request.cookies:
       return request.cookies.get(c)
 
+#This will ALWAYS search the Authorization: Bearer header
 def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, jwtSecret):
-  jwtToken = _getFromHeader(request, headersToSearch)
+  jwtToken = getTokenFromAuthorizationHeader(request, jwtSecret)
   if jwtToken is None:
-    jwtToken = _getFromLoginCookie(request, cookiesToSearch)
+    jwtToken = _getFromHeader(request, headersToSearch)
     if jwtToken is None:
-      jwtToken = _getFromNormCookie(request, cookiesToSearch)
+      jwtToken = _getFromLoginCookie(request, cookiesToSearch)
       if jwtToken is None:
-        raise Unauthorized("No JWT Token in header or cookie")
+        jwtToken = _getFromNormCookie(request, cookiesToSearch)
+        if jwtToken is None:
+          raise Unauthorized("No JWT Token in header or cookie")
   
   try:
     decodedJWTToken = DecodedTokenClass(jwtSecret, jwtToken)
