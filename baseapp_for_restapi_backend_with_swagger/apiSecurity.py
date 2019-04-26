@@ -64,7 +64,10 @@ def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookies
   except jwt.ExpiredSignatureError:
     raise Unauthorized("ExpiredSignatureError")
   except Exception as err:
-    raise Unauthorized("Problem with token - " + err)
+    #print(err) # for the repr
+    #print(str(err)) # for just the message
+    #print(err.args) # the arguments that the exception has been called with.
+    raise Unauthorized("Problem with token")
 
   for x in requiredRoleList:
     if not decodedJWTToken.hasRole(tenant, x):

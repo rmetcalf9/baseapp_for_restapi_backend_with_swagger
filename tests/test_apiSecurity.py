@@ -69,7 +69,7 @@ class test_apiSecurity(testHelperSuperClass):
 
     with self.assertRaises(Exception) as context:
       decodedToken = apiSecurityCheck(request, tenant, [], ['aa'], [], jwtSecret)
-    self.checkGotRightExceptionType(context,TypeError)
+    self.checkGotRightExceptionType(context,Unauthorized)
     
   def test_workingJWTTokenInHeader(self):
     token = generateToken(jwtSecret)
@@ -127,3 +127,14 @@ class test_apiSecurity(testHelperSuperClass):
     
     decodedToken = apiSecurityCheck(request, tenant, ['someRoleWeWant'], ['aa'], [], jwtSecret)  
     
+  def test_callSecurityWithInvalidToken(self):
+    token = 'Someinvlaidnonbase64String'
+    headersToSearch = ['cddc']
+    headers = {'cddc': token}
+    request = mockRequestObjectClass(headers, {})
+    
+    with self.assertRaises(Exception) as context:
+      decodedToken = apiSecurityCheck(request, tenant, [], headersToSearch, [], jwtSecret)
+    self.checkGotRightExceptionType(context,Unauthorized)
+    self.assertEqual(str(context.exception),'401 Unauthorized: Problem with token',msg="Wrong error message returned")
+
