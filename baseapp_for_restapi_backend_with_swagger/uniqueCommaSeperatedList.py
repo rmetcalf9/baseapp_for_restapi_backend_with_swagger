@@ -29,7 +29,7 @@ class uniqueCommaSeperatedListClass():
   def toString(self):
     res = ""
     fir = True
-    for a in self.data:
+    for a in sorted(self.data):
       if not fir:
         res += ", "
       res += a
