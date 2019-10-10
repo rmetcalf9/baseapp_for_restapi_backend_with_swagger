@@ -147,14 +147,7 @@ class AppObjBaseClass():
         if correctPrefix is not None:
           response.headers['location'] = correctPrefix['correctURL'] + '/'
           print("corrected location Header:" + response.headers['location'])
-      if (self.globalParamObject.getDeveloperMode()):
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', '*')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-      return response
 
-    @self.flaskAppObject.after_request
-    def after_request(response):
       originHeader = request.headers.get('Origin')
       if originHeader in self.accessControlAllowOriginObj.data:
         if (not self.globalParamObject.getDeveloperMode()):
