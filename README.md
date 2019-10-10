@@ -10,18 +10,7 @@ Python package which provides a base application class for an app with a restapi
 
 # Release process
 
-````
-git tag -l #find latest tag
-
-
-git tag 0.0.1
-python3 setup.py sdist
-python3 setup.py register sdist upload
-git push --tags 
-````
-
-If you get an error message reporting "dirty" versions can't be uploaded to pypi it means that you have uncommitted changes.
-
+Use coderelease
 
 # Information on building a python package
 
