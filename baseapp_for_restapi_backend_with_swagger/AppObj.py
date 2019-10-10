@@ -13,6 +13,7 @@ import pytz
 from .GlobalParamaters import GlobalParamatersClass, readFromEnviroment
 from .FlaskRestSubclass import FlaskRestSubclass
 from .webfrontendAPI import webfrontendBP, registerAPI as registerWebFrontendAPI
+from .uniqueCommaSeperatedList import uniqueCommaSeperatedListClass
 
 from .apiSecurity import apiSecurityCheck
 from base64 import b64encode
@@ -54,8 +55,10 @@ class AppObjBaseClass():
   version = None
   serverStartTime = None
   APIAPP_JWTSECRET = None
+  accessControlAllowOriginObj = None
+  APIAPP_DEFAULTMASTERTENANTJWTCOLLECTIONALLOWEDORIGINFIELD = None
 
-  
+
   incorrectRedirectList = []
 
   def registerRedirectCorrection(self, origUrlEnd, correctURL):
@@ -64,7 +67,7 @@ class AppObjBaseClass():
         t['correctURL'] = correctURL
         return
     self.incorrectRedirectList.append({ 'origUrlEnd': origUrlEnd, 'correctURL': correctURL })
-    
+
   def getCorrectPrefix(self, urlSTR):
     url = urlparse(urlSTR)
     for t in self.incorrectRedirectList:
@@ -72,7 +75,7 @@ class AppObjBaseClass():
         return t
     return None
 
-  
+
   # called by app.py to run the application
   def run(self, custom_request_handler=None):
     if (self.isInitOnce == False):
@@ -90,7 +93,7 @@ class AppObjBaseClass():
     self.serverStartTime = serverStartTime
     if self.serverStartTime is None:
       self.serverStartTime = datetime.datetime.now(pytz.utc)
-    
+
     self.APIAPP_JWTSECRET = readFromEnviroment(envirom, 'APIAPP_JWTSECRET', 'NOSECRETSET435gtvsfd5etrfc4resferfe', None).strip()
     if self.APIAPP_JWTSECRET == 'NOSECRETSET435gtvsfd5etrfc4resferfe':
       #random_secret_str = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
@@ -99,8 +102,17 @@ class AppObjBaseClass():
     else:
       #base64 encode incomming secret string
       self.APIAPP_JWTSECRET = b64encode(self.APIAPP_JWTSECRET.encode("utf-8"))
-    
-    
+
+    originCommaSeperatedList = readFromEnviroment(
+      envirom,
+      'APIAPP_COMMON_ACCESSCONTROLALLOWORIGIN',
+      '',
+      None
+    )
+    self.accessControlAllowOriginObj = uniqueCommaSeperatedListClass(originCommaSeperatedList)
+
+
+
     self.appData = {}
     self.globalParamObject = GlobalParamatersClass(envirom)
 
@@ -114,7 +126,7 @@ class AppObjBaseClass():
     self.isInitOnce = True
     self.initOnce()
     print(self.globalParamObject.getStartupOutput())
-    
+
   def initOnce(self):
     self.flaskAppObject = Flask(__name__)
     self.registerRedirectCorrection('/api', self.globalParamObject.apiurl)
@@ -141,27 +153,38 @@ class AppObjBaseClass():
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
       return response
 
+    @self.flaskAppObject.after_request
+    def after_request(response):
+      originHeader = request.headers.get('Origin')
+      if originHeader in self.accessControlAllowOriginObj.data:
+        if (not self.globalParamObject.getDeveloperMode()):
+          # base app will allow any origin if developer mode is selected
+          response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
+          response.headers.add('Access-Control-Allow-Headers', '*')
+          response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+      return response
+
     api_blueprint = Blueprint('api', __name__)
 
     internal_apidoc_prefix = '/apidocs'
     internal_api_prefix = '/api'
     internal_frontend_prefix = '/frontend'
 
-    self.flastRestPlusAPIObject = FlaskRestSubclass(api_blueprint, 
-      version='UNSET', 
+    self.flastRestPlusAPIObject = FlaskRestSubclass(api_blueprint,
+      version='UNSET',
       title='DocJob Scheduling Server API',
-      description='API for the DockJob scheduling server', 
+      description='API for the DockJob scheduling server',
       doc=internal_apidoc_prefix + '/',
       default_mediatype='application/json'
     )
     self.flastRestPlusAPIObject.setExtraParams(
-      self.globalParamObject.apidocsurl, 
-      self.globalParamObject.getAPIDOCSPath(), 
-      self.globalParamObject.overrideAPIDOCSPath, 
+      self.globalParamObject.apidocsurl,
+      self.globalParamObject.getAPIDOCSPath(),
+      self.globalParamObject.overrideAPIDOCSPath,
       self.globalParamObject.getAPIPath()
     )
 
-    self.flastRestPlusAPIObject.init_app(api_blueprint)  
+    self.flastRestPlusAPIObject.init_app(api_blueprint)
 
     self.flaskAppObject.register_blueprint(api_blueprint, url_prefix=internal_api_prefix)
     registerWebFrontendAPI(self)
@@ -302,5 +325,3 @@ class AppObjBaseClass():
 
   def apiSecurityCheck(self, request, tenant, requiredRoleList, headersToSearch, cookiesToSearch):
     return apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, self.APIAPP_JWTSECRET)
-
-

@@ -19,6 +19,7 @@ env = {
   'APIAPP_USERFORJOBS': 'root',
   'APIAPP_GROUPFORJOBS': 'root',
   'APIAPP_SKIPUSERCHECK': True,
+  'APIAPP_COMMON_ACCESSCONTROLALLOWORIGIN': 'https://sillysite.com'
 }
 appObjGlobInst = AppObjBaseClass()
 appObjGlobInst.init(env, serverStartTime=None, testingMode = True)
@@ -64,7 +65,7 @@ class testHelperSuperClass(unittest.TestCase):
     curTime = datetime.datetime.now(pytz.timezone("UTC"))
     time_diff = (curTime - time).total_seconds()
     self.assertTrue(time_diff < 3, msg=msg)
-    
+
 #helper class with setup for an APIClient
 class testHelperAPIClient(testHelperSuperClass):
   testClient = None
@@ -76,7 +77,7 @@ class testHelperAPIClient(testHelperSuperClass):
     # for testing always pretend the server started at a set datetime
     self.appObj = appObjGlobInst
     self.testClient = self.appObj.flaskAppObject.test_client()
-    self.testClient.testing = True 
+    self.testClient.testing = True
   def tearDown(self):
     self.testClient = None
 
@@ -85,6 +86,3 @@ class testHelperAPIClient(testHelperSuperClass):
       if (name==params[cur]['name']):
         return params[cur]
     return None
-
-
-

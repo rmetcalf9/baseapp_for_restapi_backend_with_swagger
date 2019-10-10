@@ -14,6 +14,7 @@ from .utils import from_iso8601
 from .GlobalParamaters import GlobalParamatersClass, getInvalidEnvVarParamaterException, readFromEnviroment, getMissingVarFileException
 from .FlaskRestSubclass import FlaskRestSubclass
 from .apiSecurity import apiSecurityCheck, decodeJWTToken, DecodedTokenClass
+from .uniqueCommaSeperatedList import uniqueCommaSeperatedListClass
 
 from ._version import get_versions
 __version__ = get_versions()['version']
