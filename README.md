@@ -12,6 +12,8 @@ Python package which provides a base application class for an app with a restapi
 
 Use coderelease
 
+(Common bug: droid-sans.css won't load - see RESTPLUSDEPENDANCY.md for a possible cause)
+
 # Information on building a python package
 
 https://www.youtube.com/watch?v=4fzAMdLKC5k

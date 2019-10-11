@@ -28,10 +28,22 @@ to get them:
 ```
 mkdir t
 cd t
-wget https://raw.githubusercontent.com/noirbizarre/flask-restplus/master/package.json -opackage.json
+wget https://raw.githubusercontent.com/noirbizarre/flask-restplus/master/package.json
 npm install
 # (gets us Swagger-UI 3.4.0)
 ```
+
+Then copy the files into the correct locations:
+```
+GR=__REPLACE_WITH_GIT_ROOT__
+
+cp ./node_modules/swagger-ui-dist/ ${GR}/baseapp_for_restapi_backend_with_swagger/static/bower/swagger-ui/dist/
+cp ./node_modules/swagger-ui-dist/* ${GR}/baseapp_for_restapi_backend_with_swagger/static/bower/swagger-ui/dist/.
+cp ./node_modules/typeface-droid-sans/index.css ${GR}/baseapp_for_restapi_backend_with_swagger/static/bower/swagger-ui/dist/droid-sans.css
+cp -r ./node_modules/typeface-droid-sans/files ${GR}/baseapp_for_restapi_backend_with_swagger/static/bower/swagger-ui/dist/.
+```
+
+note: the dist directory is part of a gitignore file. You need to force add the files.
 
 Then I copied the files from the t/node_modules/swagger-ui-dist into /static/bower/swagger-ui/dist/
 
@@ -41,7 +53,3 @@ Then I copied the files from the t/node_modules/swagger-ui-dist into /static/bow
 https://github.com/rmetcalf9/baseapp_for_restapi_backend_with_swagger/tree/master/baseapp_for_restapi_backend_with_swagger/templates
 is direct copy from
 https://github.com/noirbizarre/flask-restplus/tree/e73ed6532784720468b741b234fbc23961acc059/flask_restplus/templates
-
-
-
-
