@@ -150,8 +150,12 @@ class AppObjBaseClass():
 
       originHeader = request.headers.get('Origin')
       if originHeader in self.accessControlAllowOriginObj.data:
-        if (not self.globalParamObject.getDeveloperMode()):
-          # base app will allow any origin if developer mode is selected
+        # base app will allow any origin if developer mode is selected
+        if (self.globalParamObject.getDeveloperMode()):
+          response.headers.add('Access-Control-Allow-Origin', '*')
+          response.headers.add('Access-Control-Allow-Headers', '*')
+          response.headers.add('Access-Control-Allow-Methods', '*')
+        else:
           response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
           response.headers.add('Access-Control-Allow-Headers', '*')
           response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
