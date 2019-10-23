@@ -8,6 +8,10 @@ from baseapp_for_restapi_backend_with_swagger import AppObjBaseClass, from_iso86
 import datetime
 import pytz
 
+from nose.plugins.attrib import attr
+def wipd(f):
+    return attr('wip')(f)
+
 
 env = {
   'APIAPP_MODE': 'DOCKER',
@@ -22,7 +26,7 @@ env = {
   'APIAPP_COMMON_ACCESSCONTROLALLOWORIGIN': 'https://sillysite.com'
 }
 appObjGlobInst = AppObjBaseClass()
-appObjGlobInst.init(env, serverStartTime=None, testingMode = True)
+appObjGlobInst.init(env, serverStartTime=None, testingMode = True, serverinfoapiprefix=None)
 
 class testHelperSuperClass(unittest.TestCase):
   def checkGotRightException(self, context, ExpectedException, msg=""):

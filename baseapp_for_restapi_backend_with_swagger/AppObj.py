@@ -13,6 +13,7 @@ import pytz
 from .GlobalParamaters import GlobalParamatersClass, readFromEnviroment
 from .FlaskRestSubclass import FlaskRestSubclass
 from .webfrontendAPI import webfrontendBP, registerAPI as registerWebFrontendAPI
+from .serverInfoAPI import registerAPI as registerServerInfoAPI
 from .uniqueCommaSeperatedList import uniqueCommaSeperatedListClass
 
 from .apiSecurity import apiSecurityCheck
@@ -58,6 +59,7 @@ class AppObjBaseClass():
   accessControlAllowOriginObj = None
   APIAPP_DEFAULTMASTERTENANTJWTCOLLECTIONALLOWEDORIGINFIELD = None
 
+  serverinfoapiprefix = None
 
   incorrectRedirectList = []
 
@@ -88,7 +90,11 @@ class AppObjBaseClass():
       print("Stopped")
 
   isInitOnce = False
-  def init(self, envirom, serverStartTime, testingMode):
+  def init(self, envirom, serverStartTime, testingMode, serverinfoapiprefix):
+    if serverinfoapiprefix is None:
+      self.serverinfoapiprefix = 'info' #Must have no slashes
+    else:
+      self.serverinfoapiprefix = serverinfoapiprefix
     self.curDateTimeOverrideForTesting = None
     self.serverStartTime = serverStartTime
     if self.serverStartTime is None:
@@ -185,6 +191,7 @@ class AppObjBaseClass():
 
     self.flaskAppObject.register_blueprint(api_blueprint, url_prefix=internal_api_prefix)
     registerWebFrontendAPI(self)
+    registerServerInfoAPI(self, self.serverinfoapiprefix)
     self.flaskAppObject.register_blueprint(webfrontendBP, url_prefix=internal_frontend_prefix)
 
     self.flastRestPlusAPIObject.version = self.globalParamObject.version

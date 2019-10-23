@@ -1,7 +1,7 @@
 '''
 Test the preflight options return values are correct
 '''
-from TestHelperSuperClass import env, testHelperAPIClient
+import TestHelperSuperClass
 import json
 import copy
 from baseapp_for_restapi_backend_with_swagger import uniqueCommaSeperatedListClass
@@ -12,7 +12,8 @@ TestService = '/frontend/'
 #Origin can only have one value
 ## http://blog.crashtest-security.com/multiple-values-access-control-allow-origin
 
-class corsPreflight_helpers(testHelperAPIClient):
+#@TestHelperSuperClass.wipd
+class corsPreflight_helpers(TestHelperSuperClass.testHelperAPIClient):
   def findCORSReturnVals(self, origin):
     loginJSON = {}
     result2 = self.testClient.options(
@@ -27,7 +28,7 @@ class test_corsPreflightCorrectResponseToOptions(corsPreflight_helpers):
   def test_simpleCorsCall(self):
     a = self.findCORSReturnVals(httpOrigin)
 
-    requiredOriginList = uniqueCommaSeperatedListClass(env["APIAPP_COMMON_ACCESSCONTROLALLOWORIGIN"]).data
+    requiredOriginList = uniqueCommaSeperatedListClass(TestHelperSuperClass.env["APIAPP_COMMON_ACCESSCONTROLALLOWORIGIN"]).data
     for x in requiredOriginList:
       a = self.findCORSReturnVals(x)
       self.assertEqual(a.get("Access-Control-Allow-Origin"),x)
