@@ -56,6 +56,7 @@ class AppObjBaseClass():
   version = None
   serverStartTime = None
   APIAPP_JWTSECRET = None
+  APIAPP_JWTSKIPSIGNATURECHECK = None
   accessControlAllowOriginObj = None
   APIAPP_DEFAULTMASTERTENANTJWTCOLLECTIONALLOWEDORIGINFIELD = None
 
@@ -108,6 +109,12 @@ class AppObjBaseClass():
     else:
       #base64 encode incomming secret string
       self.APIAPP_JWTSECRET = b64encode(self.APIAPP_JWTSECRET.encode("utf-8"))
+
+    self.APIAPP_JWTSKIPSIGNATURECHECK = readFromEnviroment(envirom, 'APIAPP_JWTSKIPSIGNATURECHECK', False, acceptableValues=None, nullValueAllowed=False)
+    if self.APIAPP_JWTSKIPSIGNATURECHECK:
+      print("Warning skip JWT Signature check active (APIAPP_JWTSKIPSIGNATURECHECK)")
+      print(" - only use this option in testing mode when using prod saas_usermanagement")
+
 
     originCommaSeperatedList = readFromEnviroment(
       envirom,
@@ -328,4 +335,4 @@ class AppObjBaseClass():
     return self.curDateTimeOverrideForTesting
 
   def apiSecurityCheck(self, request, tenant, requiredRoleList, headersToSearch, cookiesToSearch):
-    return apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, self.APIAPP_JWTSECRET)
+    return apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, self.APIAPP_JWTSECRET, skipSignatureValidation=self.APIAPP_JWTSKIPSIGNATURECHECK)
