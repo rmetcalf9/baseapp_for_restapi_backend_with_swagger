@@ -110,7 +110,10 @@ class AppObjBaseClass():
       #base64 encode incomming secret string
       self.APIAPP_JWTSECRET = b64encode(self.APIAPP_JWTSECRET.encode("utf-8"))
 
-    self.APIAPP_JWTSKIPSIGNATURECHECK = readFromEnviroment(envirom, 'APIAPP_JWTSKIPSIGNATURECHECK', False, acceptableValues=None, nullValueAllowed=False)
+    APIAPP_JWTSKIPSIGNATURECHECKread = readFromEnviroment(envirom, 'APIAPP_JWTSKIPSIGNATURECHECK', defaultValue="N", acceptableValues=["Y", "N"], nullValueAllowed=False)
+    self.APIAPP_JWTSKIPSIGNATURECHECK = False
+    if APIAPP_JWTSKIPSIGNATURECHECKread=="Y":
+      self.APIAPP_JWTSKIPSIGNATURECHECK = True
     if self.APIAPP_JWTSKIPSIGNATURECHECK:
       print("Warning skip JWT Signature check active (APIAPP_JWTSKIPSIGNATURECHECK)")
       print(" - only use this option in testing mode when using prod saas_usermanagement")
