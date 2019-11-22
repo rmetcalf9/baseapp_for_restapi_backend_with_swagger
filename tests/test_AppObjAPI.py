@@ -29,24 +29,24 @@ class otherAppObjClass(AppObjBaseClass):
     self.registerRedirectCorrection('/frontend', 'http://UNKNOWN.com/abc/frontend')
     api_blueprint = Blueprint('api', __name__)
 
-    self.flastRestPlusAPIObject = FlaskRestSubclass(api_blueprint, 
-      version='UNSET', 
+    self.flastRestPlusAPIObject = FlaskRestSubclass(api_blueprint,
+      version='UNSET',
       title='DocJob Scheduling Server API',
-      description='API for the DockJob scheduling server', 
+      description='API for the DockJob scheduling server',
       doc=internal_apidoc_prefix + '/',
       default_mediatype='application/json'
     )
     self.flastRestPlusAPIObject.setExtraParams(
-      self.globalParamObject.apidocsurl, 
-      self.globalParamObject.getAPIDOCSPath(), 
-      self.globalParamObject.overrideAPIDOCSPath, 
+      self.globalParamObject.apidocsurl,
+      self.globalParamObject.getAPIDOCSPath(),
+      self.globalParamObject.overrideAPIDOCSPath,
       self.globalParamObject.getAPIPath(),
       internal_apidoc_prefix=internal_apidoc_prefix,
       internal_api_prefix=internal_api_prefix,
       internal_frontend_prefix=internal_frontend_prefix
     )
 
-    self.flastRestPlusAPIObject.init_app(api_blueprint)  
+    self.flastRestPlusAPIObject.init_app(api_blueprint)
 
     self.flaskAppObject.register_blueprint(api_blueprint, url_prefix=internal_api_prefix)
     #registerWebFrontendAPI(self)
@@ -69,7 +69,7 @@ class test_AppObjAPI(testHelperAPIClient):
     #for rule in self.appObj.flaskAppObject.url_map.iter_rules():
     #  print(rule)
     #print("*********DEBUG RULE END*************")
-    
+
     #Tests all locations for swagger files
     #  this verifys the templates
     result = self.testClient.get('/apidocs/')
@@ -80,7 +80,7 @@ class test_AppObjAPI(testHelperAPIClient):
     result = self.testClient.get('/apidocs/swaggerui/bower/swagger-ui/dist/swagger-ui.js')
 
     self.assertEqual(result.status_code, 200, msg='Could not find sample static')
-    
+
 
   def test_apidocs_redirect_bad_URLs(self):
     result = self.testClient.get('/apidocs')
@@ -107,14 +107,12 @@ class test_AppObjAPI(testHelperAPIClient):
 
   def test_indexHasCorrectSwaggerWhenUsingNonDefaultLocations(self):
     self.appObj = otherAppObjClass()
-    self.appObj.init(nonstandardEnv, serverStartTime = None, testingMode = True)
+    self.appObj.init(nonstandardEnv, serverStartTime = None, testingMode = True, serverinfoapiprefix=None)
     self.testClient = self.appObj.flaskAppObject.test_client()
-    self.testClient.testing = True 
+    self.testClient.testing = True
 
     result = self.testClient.get('/nonstandard/apidocs/')
     self.assertEqual(result.status_code, 200, msg='/nonstandard/apidocs/index.html from apidocs not present')
     idx_file = result.get_data(as_text=True)
     print(idx_file)
     self.assertNotEqual(idx_file.find('http://apiurlxxx/apidocs/swagger.json'),-1,msg='Could not find correct url for swagger.json in index')
-
-

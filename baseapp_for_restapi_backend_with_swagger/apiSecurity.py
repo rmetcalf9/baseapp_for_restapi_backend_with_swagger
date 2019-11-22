@@ -10,7 +10,7 @@ def _getFromHeader(request, headers):
       token = request.headers.get(h)
       return token
   return None
-  
+
 def _getFromLoginCookie(request, cookies):
   for c in cookies:
     if c in request.cookies:
@@ -37,16 +37,16 @@ def getTokenFromAuthorizationHeader(request, jwtSecret):
   except:
     return None
   return a
-    
-  
-  
+
+
+
 def _getFromNormCookie(request, cookies):
   for c in cookies:
     if c in request.cookies:
       return request.cookies.get(c)
 
 #This will ALWAYS search the Authorization: Bearer header
-def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, jwtSecret):
+def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, jwtSecret, skipSignatureValidation=False):
   jwtToken = getTokenFromAuthorizationHeader(request, jwtSecret)
   if jwtToken is None:
     jwtToken = _getFromHeader(request, headersToSearch)
@@ -56,9 +56,9 @@ def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookies
         jwtToken = _getFromNormCookie(request, cookiesToSearch)
         if jwtToken is None:
           raise Unauthorized("No JWT Token in header or cookie")
-  
+
   try:
-    decodedJWTToken = DecodedTokenClass(jwtSecret, jwtToken)
+    decodedJWTToken = DecodedTokenClass(jwtSecret, jwtToken, (not skipSignatureValidation))
   except jwt.InvalidSignatureError:
     raise Unauthorized("InvalidSignatureError")
   except jwt.ExpiredSignatureError:
@@ -80,18 +80,18 @@ def decodeJWTToken(token, secret, verify):
     return jwt.decode(token, b64decode(secret), algorithms=['HS256'])
   return jwt.decode(token, verify=False)
 
-  
+
 class DecodedTokenClass():
   _tokenData = None
-  
-  def __init__(self, jwtSecret, jwttoken):
+
+  def __init__(self, jwtSecret, jwttoken, verify=True):
     if jwtSecret is None:
       raise Exception('Unable to verify JWT token as APIAPP_JWTSECRET is not set')
-      
+
     #Does two decodes, one without verification
     ## this means we can read the userID
     UserID = decodeJWTToken(jwttoken, None, False)['iss']
-    self._tokenData = decodeJWTToken(jwttoken, jwtSecret, True)
+    self._tokenData = decodeJWTToken(jwttoken, jwtSecret, verify)
 
   def hasRole(self, tenant, role):
     if tenant not in self._tokenData['TenantRoles']:
@@ -99,9 +99,9 @@ class DecodedTokenClass():
     if role not in self._tokenData['TenantRoles'][tenant]:
       return False
     return True
-    
+
   def getUserID(self):
     return self._tokenData["UserID"]
-    
+
   def getPersonID(self):
     return self._tokenData["authedPersonGuid"]

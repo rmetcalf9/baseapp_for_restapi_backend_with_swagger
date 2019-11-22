@@ -13,6 +13,7 @@ import pytz
 from .GlobalParamaters import GlobalParamatersClass, readFromEnviroment
 from .FlaskRestSubclass import FlaskRestSubclass
 from .webfrontendAPI import webfrontendBP, registerAPI as registerWebFrontendAPI
+from .serverInfoAPI import registerAPI as registerServerInfoAPI
 from .uniqueCommaSeperatedList import uniqueCommaSeperatedListClass
 
 from .apiSecurity import apiSecurityCheck
@@ -55,9 +56,11 @@ class AppObjBaseClass():
   version = None
   serverStartTime = None
   APIAPP_JWTSECRET = None
+  APIAPP_JWTSKIPSIGNATURECHECK = None
   accessControlAllowOriginObj = None
   APIAPP_DEFAULTMASTERTENANTJWTCOLLECTIONALLOWEDORIGINFIELD = None
 
+  serverinfoapiprefix = None
 
   incorrectRedirectList = []
 
@@ -88,7 +91,11 @@ class AppObjBaseClass():
       print("Stopped")
 
   isInitOnce = False
-  def init(self, envirom, serverStartTime, testingMode):
+  def init(self, envirom, serverStartTime, testingMode, serverinfoapiprefix):
+    if serverinfoapiprefix is None:
+      self.serverinfoapiprefix = 'info' #Must have no slashes
+    else:
+      self.serverinfoapiprefix = serverinfoapiprefix
     self.curDateTimeOverrideForTesting = None
     self.serverStartTime = serverStartTime
     if self.serverStartTime is None:
@@ -102,6 +109,15 @@ class AppObjBaseClass():
     else:
       #base64 encode incomming secret string
       self.APIAPP_JWTSECRET = b64encode(self.APIAPP_JWTSECRET.encode("utf-8"))
+
+    APIAPP_JWTSKIPSIGNATURECHECKread = readFromEnviroment(envirom, 'APIAPP_JWTSKIPSIGNATURECHECK', defaultValue="N", acceptableValues=["Y", "N"], nullValueAllowed=False)
+    self.APIAPP_JWTSKIPSIGNATURECHECK = False
+    if APIAPP_JWTSKIPSIGNATURECHECKread=="Y":
+      self.APIAPP_JWTSKIPSIGNATURECHECK = True
+    if self.APIAPP_JWTSKIPSIGNATURECHECK:
+      print("Warning skip JWT Signature check active (APIAPP_JWTSKIPSIGNATURECHECK)")
+      print(" - only use this option in testing mode when using prod saas_usermanagement")
+
 
     originCommaSeperatedList = readFromEnviroment(
       envirom,
@@ -185,6 +201,7 @@ class AppObjBaseClass():
 
     self.flaskAppObject.register_blueprint(api_blueprint, url_prefix=internal_api_prefix)
     registerWebFrontendAPI(self)
+    registerServerInfoAPI(self, self.serverinfoapiprefix)
     self.flaskAppObject.register_blueprint(webfrontendBP, url_prefix=internal_frontend_prefix)
 
     self.flastRestPlusAPIObject.version = self.globalParamObject.version
@@ -321,4 +338,4 @@ class AppObjBaseClass():
     return self.curDateTimeOverrideForTesting
 
   def apiSecurityCheck(self, request, tenant, requiredRoleList, headersToSearch, cookiesToSearch):
-    return apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, self.APIAPP_JWTSECRET)
+    return apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, self.APIAPP_JWTSECRET, skipSignatureValidation=self.APIAPP_JWTSKIPSIGNATURECHECK)

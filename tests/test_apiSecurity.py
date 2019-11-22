@@ -17,7 +17,7 @@ class getClass():
     self.data = {}
     for x in data:
       self.data[x] = data[x]
-  
+
     self.data = data
   def get(self, key):
     return self.data[key]
@@ -35,7 +35,7 @@ class getClass():
     else:
       self.curKey += 1
       return self.keyList[self.curKey - 1]
-    
+
 class mockRequestObjectClass():
   headers = None
   cookies = None
@@ -49,16 +49,16 @@ def generateToken(secret, roleListForTenant=[]):
   JWTDict['TenantRoles'] = {
     tenant: roleListForTenant
   }
-  
+
   encodedJWT = jwt.encode(JWTDict, b64decode(secret), algorithm='HS256')
   return encodedJWT.decode('utf-8')
-    
+
 
 class test_apiSecurity(testHelperSuperClass):
-  
+
   def test_userWithNoTokenAtAllIsRefused(self):
     request = mockRequestObjectClass({}, {})
-    
+
     with self.assertRaises(Exception) as context:
       decodedToken = apiSecurityCheck(request, tenant, [], [], [], jwtSecret)
     self.checkGotRightExceptionType(context,Unauthorized)
@@ -70,71 +70,88 @@ class test_apiSecurity(testHelperSuperClass):
     with self.assertRaises(Exception) as context:
       decodedToken = apiSecurityCheck(request, tenant, [], ['aa'], [], jwtSecret)
     self.checkGotRightExceptionType(context,Unauthorized)
-    
+
   def test_workingJWTTokenInHeader(self):
     token = generateToken(jwtSecret)
-    d = DecodedTokenClass(jwtSecret, token)
-  
+
     headers = {'aa':token}
     request = mockRequestObjectClass(headers, {})
-    
+
     decodedToken = apiSecurityCheck(request, tenant, [], ['aa'], [], jwtSecret)
 
   def test_workingJWTTokenInHeaderMissingRole(self):
     token = generateToken(jwtSecret)
     d = DecodedTokenClass(jwtSecret, token)
-  
+
     headers = {'aa':token}
     request = mockRequestObjectClass(headers, {})
-    
+
     with self.assertRaises(Exception) as context:
       decodedToken = apiSecurityCheck(request, tenant, ['someRoleWeWant'], ['aa'], [], jwtSecret)
     self.checkGotRightExceptionType(context,Forbidden)
- 
+
   def test_workingJWTTokenInGotRole(self):
     token = generateToken(jwtSecret,'someRoleWeWant')
-  
+
     headers = {'aa':token}
     request = mockRequestObjectClass(headers, {})
-    
+
     decodedToken = apiSecurityCheck(request, tenant, ['someRoleWeWant'], ['aa'], [], jwtSecret)
-    
+
   def test_workingJWTTokenInGotRoleButNotSearchingThatHeader(self):
     token = generateToken(jwtSecret,'someRoleWeWant')
-  
+
     headers = {'aa':token}
     request = mockRequestObjectClass(headers, {})
-    
+
     with self.assertRaises(Exception) as context:
       decodedToken = apiSecurityCheck(request, tenant, ['someRoleWeWant'], ['bb'], [], jwtSecret)
-    self.checkGotRightExceptionType(context,Unauthorized)    
-    
+    self.checkGotRightExceptionType(context,Unauthorized)
+
   def test_JWTTokenIsInAuthorizationHeader(self):
     token = generateToken(jwtSecret,'someRoleWeWant')
-  
+
     headers = {'Authorization': 'Bearer ' + token}
     request = mockRequestObjectClass(headers, {})
-    
-    decodedToken = apiSecurityCheck(request, tenant, ['someRoleWeWant'], [], [], jwtSecret)  
-    
+
+    decodedToken = apiSecurityCheck(request, tenant, ['someRoleWeWant'], [], [], jwtSecret)
+
   def test_differentJWTTokenIsInAuthorizationHeaderRightTokenInAAHeader(self):
     token = generateToken(jwtSecret,'someRoleWeWant')
     token2 = generateToken(jwtSecret2,'someRoleWeWant')
-  
+
     headers = {'Authorization': 'Bearer ' + token2}
     headers['aa'] = token
     request = mockRequestObjectClass(headers, {})
-    
-    decodedToken = apiSecurityCheck(request, tenant, ['someRoleWeWant'], ['aa'], [], jwtSecret)  
-    
+
+    decodedToken = apiSecurityCheck(request, tenant, ['someRoleWeWant'], ['aa'], [], jwtSecret)
+
   def test_callSecurityWithInvalidToken(self):
     token = 'Someinvlaidnonbase64String'
     headersToSearch = ['cddc']
     headers = {'cddc': token}
     request = mockRequestObjectClass(headers, {})
-    
+
     with self.assertRaises(Exception) as context:
       decodedToken = apiSecurityCheck(request, tenant, [], headersToSearch, [], jwtSecret)
     self.checkGotRightExceptionType(context,Unauthorized)
     self.assertEqual(str(context.exception),'401 Unauthorized: Problem with token',msg="Wrong error message returned")
 
+  def test_invalidJWTTokenSignatureFails(self):
+    token = generateToken(jwtSecret2)
+
+    headers = {'aa':token}
+    request = mockRequestObjectClass(headers, {})
+
+    with self.assertRaises(Exception) as context:
+      decodedToken = apiSecurityCheck(request, tenant, [], ['aa'], [], jwtSecret)
+    self.checkGotRightExceptionType(context,Unauthorized)
+    self.assertEqual(str(context.exception),'401 Unauthorized: InvalidSignatureError',msg="Wrong error message returned")
+
+  def test_invalidJWTTokenSignatureSkipMakesItWork(self):
+    token = generateToken(jwtSecret2)
+
+    headers = {'aa':token}
+    request = mockRequestObjectClass(headers, {})
+
+    decodedToken = apiSecurityCheck(request, tenant, [], ['aa'], [], jwtSecret, skipSignatureValidation=True)
