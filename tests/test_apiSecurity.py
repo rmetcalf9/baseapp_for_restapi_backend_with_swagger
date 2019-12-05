@@ -2,6 +2,9 @@ from TestHelperSuperClass import testHelperSuperClass, env
 from baseapp_for_restapi_backend_with_swagger import apiSecurityCheck, DecodedTokenClass
 import jwt
 from base64 import b64decode, b64encode
+import datetime
+import pytz
+from unittest.mock import patch
 
 from werkzeug.exceptions import Unauthorized, Forbidden
 
@@ -42,10 +45,25 @@ class mockRequestObjectClass():
   def __init__(self, headers, cookies):
     self.headers = getClass(headers)
 
+class CurTime():
+  frozen=None
+  def get(self):
+    if self.frozen is None:
+      return datetime.datetime.now(pytz.timezone("UTC"))
+    return self.frozen
+  def freeze(self, timeToFreezeAt):
+    self.frozen = timeToFreezeAt
+  def unfreeze(self):
+    self.frozen = None
+curTime=CurTime()
+
 def generateToken(secret, roleListForTenant=[]):
+  expiryTime = curTime.get() + datetime.timedelta(seconds=int(5)) #5 second expiry
+
   JWTDict = {}
   JWTDict['authedPersonGuid'] = 'personGUID'
   JWTDict['iss'] = 'key'
+  JWTDict['exp'] = expiryTime
   JWTDict['TenantRoles'] = {
     tenant: roleListForTenant
   }
@@ -55,6 +73,8 @@ def generateToken(secret, roleListForTenant=[]):
 
 
 class test_apiSecurity(testHelperSuperClass):
+  def setUp(self):
+    curTime.unfreeze()
 
   def test_userWithNoTokenAtAllIsRefused(self):
     request = mockRequestObjectClass({}, {})
@@ -155,3 +175,15 @@ class test_apiSecurity(testHelperSuperClass):
     request = mockRequestObjectClass(headers, {})
 
     decodedToken = apiSecurityCheck(request, tenant, [], ['aa'], [], jwtSecret, skipSignatureValidation=True)
+
+  def test_tokenExpiry(self):
+    curTime.freeze(datetime.datetime.now(pytz.timezone("UTC")) - datetime.timedelta(seconds=int(50)))
+    token = generateToken(jwtSecret)
+
+    headers = {'aa':token}
+    request = mockRequestObjectClass(headers, {})
+
+    with self.assertRaises(Exception) as context:
+      decodedToken = apiSecurityCheck(request, tenant, [], ['aa'], [], jwtSecret)
+    self.checkGotRightExceptionType(context,Unauthorized)
+    self.assertEqual(str(context.exception),"401 Unauthorized: ExpiredSignatureError")
