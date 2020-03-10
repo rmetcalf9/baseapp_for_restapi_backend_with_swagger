@@ -339,3 +339,7 @@ class AppObjBaseClass():
 
   def apiSecurityCheck(self, request, tenant, requiredRoleList, headersToSearch, cookiesToSearch):
     return apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, self.APIAPP_JWTSECRET, skipSignatureValidation=self.APIAPP_JWTSKIPSIGNATURECHECK)
+
+  # deisgned to be overridden by derived classes
+  def getDerivedServerInfoData(self):
+    return None

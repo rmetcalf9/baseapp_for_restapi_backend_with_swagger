@@ -26,9 +26,20 @@ def registerAPI(appObj, serverinfoapiprefix):
     def get(self):
      '''Get general information about the server'''
      curDatetime = datetime.datetime.now(pytz.utc)
+     x = appObj.getDerivedServerInfoData()
+     if x is None:
+       return {
+         'Server': {
+           'Version': appObj.version ,
+           'APIAPP_APIDOCSURL': appObj.globalParamObject.apidocsurl,
+           'APIAPP_FRONTENDURL': appObj.globalParamObject.APIAPP_FRONTENDURL
+         }
+       }
      return {
       'Server': {
         'Version': appObj.version ,
-        'APIAPP_APIDOCSURL': appObj.globalParamObject.apidocsurl
-      }
+        'APIAPP_APIDOCSURL': appObj.globalParamObject.apidocsurl,
+        'APIAPP_FRONTENDURL': appObj.globalParamObject.APIAPP_FRONTENDURL
+      },
+      'Derived': x
      }
