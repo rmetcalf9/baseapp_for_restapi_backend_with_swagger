@@ -12,6 +12,9 @@ from nose.plugins.attrib import attr
 def wipd(f):
     return attr('wip')(f)
 
+serverInfoExtra = {
+  "ret": None
+}
 
 env = {
   'APIAPP_MODE': 'DOCKER',
@@ -19,13 +22,17 @@ env = {
   'APIAPP_FRONTEND': '.',
   'APIAPP_APIURL': 'http://apiurlxxx',
   'APIAPP_APIDOCSURL': 'http://apiurlxxx/apidocs',
+  'APIAPP_FRONTENDURL': 'http://frontendurltest.com', #No terminating slash
   'APIAPP_APIACCESSSECURITY': '[{ "type": "basic-auth" }]',
   'APIAPP_USERFORJOBS': 'root',
   'APIAPP_GROUPFORJOBS': 'root',
   'APIAPP_SKIPUSERCHECK': True,
   'APIAPP_COMMON_ACCESSCONTROLALLOWORIGIN': 'https://sillysite.com'
 }
-appObjGlobInst = AppObjBaseClass()
+class appObjDer(AppObjBaseClass):
+  def getDerivedServerInfoData(self):
+    return serverInfoExtra["ret"]
+appObjGlobInst = appObjDer()
 appObjGlobInst.init(env, serverStartTime=None, testingMode = True, serverinfoapiprefix=None)
 
 class testHelperSuperClass(unittest.TestCase):

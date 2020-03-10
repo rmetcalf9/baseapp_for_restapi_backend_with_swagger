@@ -1,5 +1,5 @@
 from baseapp_for_restapi_backend_with_swagger import FlaskRestSubclass
-from TestHelperSuperClass import testHelperAPIClient
+from TestHelperSuperClass import testHelperAPIClient, env
 from baseapp_for_restapi_backend_with_swagger.AppObj import AppObjBaseClass
 
 from flask_restplus import fields
@@ -11,6 +11,7 @@ nonstandardEnv = {
   'APIAPP_VERSION': 'TEST-3.3.3',
   'APIAPP_FRONTEND': '.',
   'APIAPP_APIURL': 'http://apiurlxxx',
+  'APIAPP_FRONTENDURL': 'http:/dsfslfknfed',
   'APIAPP_APIDOCSURL': 'http://apiurlxxx/apidocs',
   'APIAPP_APIACCESSSECURITY': '[{ "type": "basic-auth" }]',
   'APIAPP_USERFORJOBS': 'root',
@@ -96,7 +97,7 @@ class test_AppObjAPI(testHelperAPIClient):
     result = self.testClient.get('/frontend')
     if (result.status_code != 301):
       self.assertEqual(result.status_code, 308, msg="return code should be 301 or 308")
-    self.assertEqual(result.headers['location'], 'http://UNKNOWN.com/abc/frontend/')
+    self.assertEqual(result.headers['location'], env["APIAPP_FRONTENDURL"] + '/') #in redirect add a slash
 
   def test_indexPointsToCorrectSwaggerJSON(self):
     result = self.testClient.get('/apidocs/')

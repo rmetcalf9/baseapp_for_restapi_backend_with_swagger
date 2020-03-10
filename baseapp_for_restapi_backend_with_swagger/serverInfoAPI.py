@@ -6,10 +6,12 @@ import pytz
 def getServerInfoModel(appObj):
   serverInfoServerModel = appObj.flastRestPlusAPIObject.model('mainAPI', {
     'Version': fields.String(default='DEFAULT', description='Version of container running on server'),
-    'APIAPP_APIDOCSURL': fields.String(default='',description='Base endpoint for EBO docs')
+    'APIAPP_APIDOCSURL': fields.String(default='',description='Base endpoint for EBO docs'),
+    'APIAPP_FRONTENDURL': fields.String(default='',description='Base endpoint for frontend of app')
   })
   return appObj.flastRestPlusAPIObject.model('ServerInfo', {
-    'Server': fields.Nested(serverInfoServerModel)
+    'Server': fields.Nested(serverInfoServerModel),
+    'Derived': fields.Raw(required=False)
   })
 
 def registerAPI(appObj, serverinfoapiprefix):

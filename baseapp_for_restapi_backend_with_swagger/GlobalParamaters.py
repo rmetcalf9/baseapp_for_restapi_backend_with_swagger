@@ -8,7 +8,7 @@ def getInvalidEnvVarParamaterException(envVarName, actualValue=None, messageOver
   if envVarName not in exceptions:
     exceptions[envVarName] = InvalidEnvVarParamaterExecption(envVarName, actualValue, messageOverride)
   return exceptions[envVarName]
-  
+
 class InvalidEnvVarParamaterExecption(Exception):
   def __init__(self, envVarName, actualValue=None, messageOverride=None):
     message = 'Invalid value for'
@@ -27,7 +27,7 @@ def getMissingVarFileException(envVarName, fileName):
   if envVarName not in missingVarFileExceptions:
     missingVarFileExceptions[envVarName] = MissingVarFileExceptionClass(envVarName, fileName)
   return missingVarFileExceptions[envVarName]
-    
+
 #Read environment variable or raise an exception if it is missing and there is no default
 def readFromEnviroment(env, envVarName, defaultValue, acceptableValues, nullValueAllowed=False):
   val = None
@@ -54,8 +54,8 @@ def readFromEnviroment(env, envVarName, defaultValue, acceptableValues, nullValu
     if val == '':
       raise getInvalidEnvVarParamaterException(envVarName, None, 'Null/Empty String')
   return val
-    
-    
+
+
 # class to store GlobalParmaters
 class GlobalParamatersClass():
   mode = None
@@ -66,7 +66,7 @@ class GlobalParamatersClass():
   apiaccesssecurity = None
   APIAPP_PORT = None
   APIAPP_FRONTENDURL = None
-  
+
   def __init__(self, env):
     self.mode = readFromEnviroment(env, 'APIAPP_MODE', None, ['DEVELOPER','DOCKER'])
     self.version = readFromEnviroment(env, 'APIAPP_VERSION', None, None)
@@ -108,7 +108,7 @@ class GlobalParamatersClass():
       if val[-1:] != '\\':
         return
     raise getInvalidEnvVarParamaterException(param, actualValue=val, messageOverride='Should not end with a slash')
-    
+
   def getStartupOutput(self):
     r = 'Mode:' + self.mode + '\n'
     r += 'Version:' + self.version + '\n'
@@ -145,5 +145,3 @@ class GlobalParamatersClass():
 
   def getAPIDOCSPath(self):
     return self.getSanitizedPath(self.apidocsurl)
-
-
