@@ -83,10 +83,13 @@ def decodeJWTToken(token, secret, verify):
 
 class DecodedTokenClass():
   _tokenData = None
+  origJWTToken = None
 
   def __init__(self, jwtSecret, jwttoken, verify=True):
     if jwtSecret is None:
       raise Exception('Unable to verify JWT token as APIAPP_JWTSECRET is not set')
+
+    self.origJWTToken = jwttoken
 
     #Does two decodes, one without verification
     ## this means we can read the userID
@@ -105,3 +108,6 @@ class DecodedTokenClass():
 
   def getPersonID(self):
     return self._tokenData["authedPersonGuid"]
+
+  def getOrigJWTToken(self):
+    return self.origJWTToken
