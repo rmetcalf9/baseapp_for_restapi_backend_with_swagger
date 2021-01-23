@@ -2,7 +2,7 @@ from baseapp_for_restapi_backend_with_swagger import FlaskRestSubclass
 from TestHelperSuperClass import testHelperAPIClient, env
 from baseapp_for_restapi_backend_with_swagger.AppObj import AppObjBaseClass
 
-from flask_restplus import fields
+from flask_restx import fields
 from flask import Flask, Blueprint, request
 
 

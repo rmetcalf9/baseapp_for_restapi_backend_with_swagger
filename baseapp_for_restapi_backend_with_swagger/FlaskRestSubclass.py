@@ -1,4 +1,4 @@
-from flask_restplus import Api
+from flask_restx import Api
 from flask import url_for, render_template
 import re
 import json
@@ -29,7 +29,7 @@ class FlaskRestSubclass(Api):
   internal_apidoc_prefix='/apidocs'
   internal_api_prefix='/api'
   internal_frontend_prefix='/frontend'
-  
+
   complexReplaceString='dFDHf..kh543rrgefb..546t3rq54'
 
   bc_HTTPStatus_OK = None
@@ -37,12 +37,12 @@ class FlaskRestSubclass(Api):
   bc_HTTPStatus_INTERNAL_SERVER_ERROR = None
 
   # Extra params inited manually
-  apidocsurl = None 
+  apidocsurl = None
   APIDOCSPath = None
   overrideAPIDOCSPath = None
   APIPath = None
   localApiDoc = None
-  
+
   def setExtraParams(self, apidocsurl, APIDOCSPath, overrideAPIDOCSPath, APIPath,internal_apidoc_prefix = '/apidocs',internal_api_prefix = '/api',internal_frontend_prefix = '/frontend'):
     self.apidocsurl = apidocsurl
     self.APIDOCSPath = APIDOCSPath
@@ -67,20 +67,20 @@ class FlaskRestSubclass(Api):
         self.bc_HTTPStatus_OK = HTTPStatus.OK
         self.bc_HTTPStatus_NOT_FOUND = HTTPStatus.NOT_FOUND
         self.bc_HTTPStatus_INTERNAL_SERVER_ERROR = HTTPStatus.INTERNAL_SERVER_ERROR
-  
+
   def get_swagger_static_internal_path(self, filename):
     #print('AAA')
     #print(self._doc) #/ebodocs/GenderV1/
     #print(filename) #swagger-ui.css
     #print(self.overrideAPIDOCSPath) #True or False
     #print(self.APIDOCSPath) #/apidocs
-    
+
     #Only one global template is held so the last registered one is called
     # This means the wron EBO path will be selected
     # so I have had to use the replace method to correct it
     return self.complexReplaceString + '/swaggerui/bower/swagger-ui/dist/' + filename
     #return self.APIDOCSPath + '/swaggerui/bower/swagger-ui/dist/' + filename
-    
+
   def _init_local_apidoc_variable(self, doc):
       self.localApiDoc = Apidoc('restplus_doc_' + doc, __name__,
           template_folder='templates',
@@ -90,7 +90,7 @@ class FlaskRestSubclass(Api):
       # Registering internal function for use in templates
       self.localApiDoc.add_app_template_global(self.get_swagger_static_internal_path, name='swagger_static')
 
-  #I don't want documentation to be registered here so overriding      
+  #I don't want documentation to be registered here so overriding
   def _register_doc(self, app_or_blueprint):
       #if self._add_specs and self._doc:
       #    # Register documentation before root if enabled
@@ -101,7 +101,7 @@ class FlaskRestSubclass(Api):
   def _register_specs(self, app_or_blueprint):
     #Seems to be called twice. I don't know why
     pass
-      
+
   def _register_apidoc(self, app):
     app_or_blueprint = self.blueprint or app
     conf = app.extensions.setdefault('restplus', {})
@@ -110,11 +110,11 @@ class FlaskRestSubclass(Api):
       locToRegister = removeTrailingSlash(self._doc)
       self.localApiDoc.add_url_rule('/swagger.json', 'spec', self.getSwaggerJSON) #Register / will become /apidocs/swagger.json
       self.localApiDoc.add_url_rule('/', 'doc', self.render_doc)  #Register / will become /apidocs/
-      
+
       app_or_blueprint.add_url_rule('/swagger.json', 'spec_api', self.getSwaggerJSON) #Register / will become /apis/swagger.json
-      
+
       app.register_blueprint(self.localApiDoc, url_prefix=locToRegister)
-      
+
     conf[configParamVal] = True
 
   # Flask will serve the files with the url pointing at /apidocs.
@@ -158,7 +158,7 @@ class FlaskRestSubclass(Api):
     :rtype: str
     '''
     return self.APIPath
-    
+
   @property
   def specs_url(self):
       '''

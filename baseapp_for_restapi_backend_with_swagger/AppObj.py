@@ -1,5 +1,5 @@
 
-from flask_restplus import fields
+from flask_restx import fields
 from flask import Flask, Blueprint, request
 from urllib.parse import urlparse
 import signal
