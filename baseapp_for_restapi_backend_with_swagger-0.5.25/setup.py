@@ -9,7 +9,7 @@ sp_install_requires = [
   'python-dateutil==2.8.1',
   'sortedcontainers==2.4.0',
   'bcrypt==3.1.5',
-  'pyjwt==1.7.1'
+  'pyjwt==2.4.0'
 ]
 sp_tests_require = [
   'nose==1.3.7'
