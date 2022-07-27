@@ -8,10 +8,6 @@ from baseapp_for_restapi_backend_with_swagger import AppObjBaseClass, from_iso86
 import datetime
 import pytz
 
-from nose.plugins.attrib import attr
-def wipd(f):
-    return attr('wip')(f)
-
 serverInfoExtra = {
   "ret": None
 }
