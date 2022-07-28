@@ -12,7 +12,7 @@ sp_install_requires = [
   'pyjwt==1.7.1'
 ]
 sp_tests_require = [
-  'nose==1.3.7'
+  'pytest==7.1.2'
 ]
 
 all_require = sp_install_requires + sp_tests_require
