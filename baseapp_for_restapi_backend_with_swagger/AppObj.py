@@ -346,7 +346,8 @@ class AppObjBaseClass():
       cookiesToSearch,
       self.APIAPP_JWTSECRET,
       skipSignatureValidation=self.APIAPP_JWTSKIPSIGNATURECHECK,
-      outputExceptions=outputExceptions
+      outputExceptions=outputExceptions,
+      getCurDateTime=self.getCurDateTime
     )
 
   # deisgned to be overridden by derived classes

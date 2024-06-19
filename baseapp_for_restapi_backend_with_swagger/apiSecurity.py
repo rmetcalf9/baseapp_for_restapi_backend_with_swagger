@@ -41,7 +41,7 @@ def _getFromNormCookie(request, cookies):
       return request.cookies.get(c)
 
 #This will ALWAYS search the Authorization: Bearer header
-def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, jwtSecret, skipSignatureValidation=False, outputExceptions=False):
+def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, jwtSecret, skipSignatureValidation=False, outputExceptions=False, getCurDateTime=None):
   jwtToken = getTokenFromAuthorizationHeader(request, jwtSecret)
   if jwtToken is None:
     jwtToken = _getFromHeader(request, headersToSearch)
@@ -57,7 +57,7 @@ def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookies
 
 
   try:
-    decodedJWTToken = DecodedTokenClass(jwtSecret, jwtToken, (not skipSignatureValidation))
+    decodedJWTToken = DecodedTokenClass(jwtSecret, jwtToken, (not skipSignatureValidation), getCurDateTime=getCurDateTime)
   except jwt.InvalidSignatureError:
     raise Unauthorized("InvalidSignatureError")
   except jwt.ExpiredSignatureError:
@@ -89,7 +89,7 @@ class DecodedTokenClass():
   _tokenData = None
   origJWTToken = None
 
-  def __init__(self, jwtSecret, jwttoken, verify=True):
+  def __init__(self, jwtSecret, jwttoken, verify=True, getCurDateTime=None):
     if jwtSecret is None:
       raise Exception('Unable to verify JWT token as APIAPP_JWTSECRET is not set')
 
@@ -99,6 +99,11 @@ class DecodedTokenClass():
     ## this means we can read the userID
     UserID = decodeJWTToken(jwttoken, None, False)['iss']
     self._tokenData = decodeJWTToken(jwttoken, jwtSecret, verify)
+
+    #pyJWT does this for us but sometimes we test with a different internal clock
+    if getCurDateTime is not None:
+      if (getCurDateTime().timestamp() > self._tokenData._tokenData["exp"]):
+        raise jwt.ExpiredSignatureError()
 
   def hasRole(self, tenant, role):
     if tenant not in self._tokenData['TenantRoles']:

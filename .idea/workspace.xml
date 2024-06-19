@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="bd74c761-ea4a-4c4d-a330-feed9b0a4868" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/AppObj.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/AppObj.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/apiSecurity.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/apiSecurity.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -19,9 +20,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="1nT0FqNPhkTseHSKlKMsAA1M4Xj" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
