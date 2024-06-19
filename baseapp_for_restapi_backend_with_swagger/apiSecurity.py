@@ -82,7 +82,7 @@ def decodeJWTToken(token, secret, verify):
   options = {
     "veirfy_signature": False
   }
-  return jwt.decode(token, options=options)
+  return jwt.decode(token, options=options, algorithms=['HS256'])
 
 
 class DecodedTokenClass():
