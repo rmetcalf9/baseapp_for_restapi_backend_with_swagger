@@ -80,7 +80,7 @@ def decodeJWTToken(token, secret, verify):
   if verify:
     return jwt.decode(token, b64decode(secret), algorithms=['HS256'])
   options = {
-    "veirfy_signature": False
+    "verify_signature": False
   }
   return jwt.decode(token, options=options, algorithms=['HS256'])
 
