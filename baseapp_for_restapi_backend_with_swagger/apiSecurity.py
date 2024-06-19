@@ -102,7 +102,7 @@ class DecodedTokenClass():
 
     #pyJWT does this for us but sometimes we test with a different internal clock
     if getCurDateTime is not None:
-      if (getCurDateTime().timestamp() > self._tokenData._tokenData["exp"]):
+      if (getCurDateTime().timestamp() > self._tokenData["exp"]):
         raise jwt.ExpiredSignatureError()
 
   def hasRole(self, tenant, role):
