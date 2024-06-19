@@ -337,8 +337,17 @@ class AppObjBaseClass():
       return datetime.datetime.now(pytz.timezone("UTC"))
     return self.curDateTimeOverrideForTesting
 
-  def apiSecurityCheck(self, request, tenant, requiredRoleList, headersToSearch, cookiesToSearch):
-    return apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, self.APIAPP_JWTSECRET, skipSignatureValidation=self.APIAPP_JWTSKIPSIGNATURECHECK)
+  def apiSecurityCheck(self, request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, outputExceptions=False):
+    return apiSecurityCheck(
+      request,
+      tenant,
+      requiredRoleList,
+      headersToSearch,
+      cookiesToSearch,
+      self.APIAPP_JWTSECRET,
+      skipSignatureValidation=self.APIAPP_JWTSKIPSIGNATURECHECK,
+      outputExceptions=outputExceptions
+    )
 
   # deisgned to be overridden by derived classes
   def getDerivedServerInfoData(self):

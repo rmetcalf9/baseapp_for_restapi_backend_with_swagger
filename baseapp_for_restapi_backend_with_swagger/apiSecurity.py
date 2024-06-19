@@ -32,12 +32,7 @@ def getTokenFromAuthorizationHeader(request, jwtSecret):
   if not a.startswith('Bearer '):
     return None
   a = a[7:].strip()
-  try:
-    decodedJWTToken = DecodedTokenClass(jwtSecret, a)
-  except:
-    return None
   return a
-
 
 
 def _getFromNormCookie(request, cookies):
@@ -46,7 +41,7 @@ def _getFromNormCookie(request, cookies):
       return request.cookies.get(c)
 
 #This will ALWAYS search the Authorization: Bearer header
-def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, jwtSecret, skipSignatureValidation=False):
+def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookiesToSearch, jwtSecret, skipSignatureValidation=False, outputExceptions=False):
   jwtToken = getTokenFromAuthorizationHeader(request, jwtSecret)
   if jwtToken is None:
     jwtToken = _getFromHeader(request, headersToSearch)
@@ -57,6 +52,10 @@ def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookies
         if jwtToken is None:
           raise Unauthorized("No JWT Token in header or cookie")
 
+  if jwtSecret is None:
+    raise Unauthorized('Unable to verify JWT token as APIAPP_JWTSECRET is not set (Precheck)')
+
+
   try:
     decodedJWTToken = DecodedTokenClass(jwtSecret, jwtToken, (not skipSignatureValidation))
   except jwt.InvalidSignatureError:
@@ -64,9 +63,11 @@ def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookies
   except jwt.ExpiredSignatureError:
     raise Unauthorized("ExpiredSignatureError")
   except Exception as err:
-    #print(err) # for the repr
-    #print(str(err)) # for just the message
-    #print(err.args) # the arguments that the exception has been called with.
+    if outputExceptions:
+      print("EXCEPTION decoding JWT token:")
+      print(err) # for the repr
+      print(str(err)) # for just the message
+      print(err.args) # the arguments that the exception has been called with.
     raise Unauthorized("Problem with token")
 
   for x in requiredRoleList:
@@ -78,7 +79,10 @@ def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookies
 def decodeJWTToken(token, secret, verify):
   if verify:
     return jwt.decode(token, b64decode(secret), algorithms=['HS256'])
-  return jwt.decode(token, verify=False)
+  options = {
+    "veirfy_signature": False
+  }
+  return jwt.decode(token, options=options)
 
 
 class DecodedTokenClass():
