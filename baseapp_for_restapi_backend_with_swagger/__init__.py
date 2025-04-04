@@ -16,6 +16,5 @@ from .FlaskRestSubclass import FlaskRestSubclass
 from .apiSecurity import apiSecurityCheck, decodeJWTToken, DecodedTokenClass
 from .uniqueCommaSeperatedList import uniqueCommaSeperatedListClass
 
-from ._version import get_versions
-__version__ = get_versions()['version']
-del get_versions
+from . import _version
+__version__ = _version.get_versions()['version']
