@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd74c761-ea4a-4c4d-a330-feed9b0a4868" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/apiSecurity.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/apiSecurity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
