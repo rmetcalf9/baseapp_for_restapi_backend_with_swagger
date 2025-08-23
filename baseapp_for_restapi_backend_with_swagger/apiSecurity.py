@@ -77,9 +77,6 @@ def apiSecurityCheck(request, tenant, requiredRoleList, headersToSearch, cookies
   return decodedJWTToken
 
 def decodeJWTToken(token, secret, verify):
-  print("token", token)
-  print("secret", secret)
-  print("verify", verify)
   if verify:
     return jwt.decode(token, b64decode(secret), algorithms=['HS256'])
   options = {
