@@ -3,16 +3,16 @@ import versioneer
 
 #Dependancy lists maintained here and in tox.ini
 sp_install_requires = [
-  'pytz==2019.3',
-  'flask==2.0.3',
-  'flask_restx==0.5.1',
+  'pytz==2025.2',
+  'flask==3.1.2',
+  'flask_restx==1.3.0',
   'python-dateutil==2.8.1',
   'sortedcontainers==2.4.0',
   'bcrypt==3.1.5',
   'pyjwt==2.8.0'
 ]
 sp_tests_require = [
-  'pytest==7.1.2'
+  'pytest==8.4.1'
 ]
 
 all_require = sp_install_requires + sp_tests_require

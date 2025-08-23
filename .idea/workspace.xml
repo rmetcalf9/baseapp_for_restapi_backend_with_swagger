@@ -5,7 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd74c761-ea4a-4c4d-a330-feed9b0a4868" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/baseapp_for_restapi_backend_with_swagger.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/baseapp_for_restapi_backend_with_swagger.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/AppObj.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/AppObj.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/FlaskRestSubclass.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/FlaskRestSubclass.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/apiSecurity.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/apiSecurity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/continous_test.sh" beforeDir="false" afterPath="$PROJECT_DIR$/continous_test.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_AppObjAPI.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_AppObjAPI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_apiSecurity.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_apiSecurity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tox.ini" beforeDir="false" afterPath="$PROJECT_DIR$/tox.ini" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,12 +36,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PY-251.26927.90" />
+        <option value="bundled-python-sdk-41e8cd69c857-64d779b69b7a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26927.90" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
@@ -43,8 +70,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1611398672551</updated>
+      <workItem from="1755940282730" duration="6087000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

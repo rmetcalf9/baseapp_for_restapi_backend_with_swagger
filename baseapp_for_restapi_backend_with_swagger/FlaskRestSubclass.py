@@ -1,3 +1,5 @@
+##Removing dependance on this class
+
 from flask_restx import Api
 from flask import url_for, render_template
 import re
@@ -108,10 +110,10 @@ class FlaskRestSubclass(Api):
     configParamVal = 'apidoc_registered_' + self._doc
     if not conf.get(configParamVal, False):
       locToRegister = removeTrailingSlash(self._doc)
-      self.localApiDoc.add_url_rule('/swagger.json', 'spec', self.getSwaggerJSON) #Register / will become /apidocs/swagger.json
-      self.localApiDoc.add_url_rule('/', 'doc', self.render_doc)  #Register / will become /apidocs/
+      #TODO DISABLES SWAGGER RESTORE self.localApiDoc.add_url_rule('/swagger.json', 'spec', self.getSwaggerJSON) #Register / will become /apidocs/swagger.json
+      #TODO DISABLES SWAGGER RESTORE self.localApiDoc.add_url_rule('/', 'doc', self.render_doc)  #Register / will become /apidocs/
 
-      app_or_blueprint.add_url_rule('/swagger.json', 'spec_api', self.getSwaggerJSON) #Register / will become /apis/swagger.json
+      #TODO DISABLES SWAGGER RESTORE app_or_blueprint.add_url_rule('/swagger.json', 'spec_api', self.getSwaggerJSON) #Register / will become /apis/swagger.json
 
       app.register_blueprint(self.localApiDoc, url_prefix=locToRegister)
 

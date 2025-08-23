@@ -1,6 +1,6 @@
 
-from flask_restx import fields
-from flask import Flask, Blueprint, request
+from flask_restx import fields, Api, Resource
+from flask import Flask, Blueprint, request, redirect, send_from_directory
 from urllib.parse import urlparse
 import signal
 import functools
@@ -9,9 +9,10 @@ from sortedcontainers import SortedDict
 import bcrypt
 import datetime
 import pytz
+import os
 
 from .GlobalParamaters import GlobalParamatersClass, readFromEnviroment
-from .FlaskRestSubclass import FlaskRestSubclass
+### Removing this from .FlaskRestSubclass import FlaskRestSubclass
 from .webfrontendAPI import webfrontendBP, registerAPI as registerWebFrontendAPI
 from .serverInfoAPI import registerAPI as registerServerInfoAPI
 from .uniqueCommaSeperatedList import uniqueCommaSeperatedListClass
@@ -149,6 +150,21 @@ class AppObjBaseClass():
     self.registerRedirectCorrection('/apidocs', self.globalParamObject.apidocsurl)
     self.registerRedirectCorrection('/frontend', self.globalParamObject.APIAPP_FRONTENDURL)
 
+    @self.flaskAppObject.route('/apidocs')
+    def apidocs_redirect():
+      return redirect('/apidocs/', code=301)
+
+    @self.flaskAppObject.route('/apidocs/swaggerui/<path:filename>')
+    def serve_swagger_static(filename):
+      """Serve Flask-RESTX static files"""
+      import flask_restx
+
+      # Get the static directory from Flask-RESTX package
+      restx_path = os.path.dirname(flask_restx.__file__)
+      static_path = os.path.join(restx_path, 'static')
+
+      return send_from_directory(static_path, filename)
+
     #Development code required to add CORS allowance in developer mode
     # - in prod mode services and web app are behind a reverse proxy and so no CORS security is triggered
     # - in dev mode serivces are run locally on developer machine possible on different ports etc.
@@ -183,21 +199,21 @@ class AppObjBaseClass():
     internal_api_prefix = '/api'
     internal_frontend_prefix = '/frontend'
 
-    self.flastRestPlusAPIObject = FlaskRestSubclass(api_blueprint,
+    self.flastRestPlusAPIObject = Api(api_blueprint,
       version='UNSET',
       title='DocJob Scheduling Server API',
       description='API for the DockJob scheduling server',
       doc=internal_apidoc_prefix + '/',
       default_mediatype='application/json'
     )
-    self.flastRestPlusAPIObject.setExtraParams(
-      self.globalParamObject.apidocsurl,
-      self.globalParamObject.getAPIDOCSPath(),
-      self.globalParamObject.overrideAPIDOCSPath,
-      self.globalParamObject.getAPIPath()
-    )
+    # self.flastRestPlusAPIObject.setExtraParams(
+    #   self.globalParamObject.apidocsurl,
+    #   self.globalParamObject.getAPIDOCSPath(),
+    #   self.globalParamObject.overrideAPIDOCSPath,
+    #   self.globalParamObject.getAPIPath()
+    # )
 
-    self.flastRestPlusAPIObject.init_app(api_blueprint)
+    ##self.flastRestPlusAPIObject.init_app(api_blueprint) AI says not needed as it causes double registration
 
     self.flaskAppObject.register_blueprint(api_blueprint, url_prefix=internal_api_prefix)
     registerWebFrontendAPI(self)
