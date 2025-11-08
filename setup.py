@@ -9,7 +9,8 @@ sp_install_requires = [
   'python-dateutil==2.8.1',
   'sortedcontainers==2.4.0',
   'bcrypt==3.1.5',
-  'pyjwt==2.8.0'
+  'pyjwt==2.8.0',
+  'hvac==2.4.0'
 ]
 sp_tests_require = [
   'pytest==8.4.1'

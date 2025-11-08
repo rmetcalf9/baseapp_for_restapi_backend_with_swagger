@@ -10,6 +10,7 @@ import bcrypt
 import datetime
 import pytz
 import os
+from .VaultClient import VaultClient
 
 from .GlobalParamaters import GlobalParamatersClass, readFromEnviroment
 ### Removing this from .FlaskRestSubclass import FlaskRestSubclass
@@ -92,7 +93,10 @@ class AppObjBaseClass():
       print("Stopped")
 
   isInitOnce = False
-  def init(self, envirom, serverStartTime, testingMode, serverinfoapiprefix):
+  def init(self, envirom, serverStartTime, testingMode, serverinfoapiprefix, useVault=False):
+    if useVault:
+      self.vaultClient = VaultClient(envirom, readFromEnviroment)
+
     if serverinfoapiprefix is None:
       self.serverinfoapiprefix = 'info' #Must have no slashes
     else:

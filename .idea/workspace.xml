@@ -5,13 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd74c761-ea4a-4c4d-a330-feed9b0a4868" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/VaultClient.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/apiSecurity.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/apiSecurity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/AppObj.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/AppObj.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tox.ini" beforeDir="false" afterPath="$PROJECT_DIR$/tox.ini" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -45,7 +55,6 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PY-251.26927.90" />
         <option value="bundled-python-sdk-41e8cd69c857-64d779b69b7a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26927.90" />
       </set>
     </attachedChunks>
@@ -62,7 +71,7 @@
       <option name="presentableId" value="Default" />
       <updated>1611398672551</updated>
       <workItem from="1755940282730" duration="6304000" />
-      <workItem from="1755975954464" duration="32000" />
+      <workItem from="1755975954464" duration="75000" />
     </task>
     <servers />
   </component>
