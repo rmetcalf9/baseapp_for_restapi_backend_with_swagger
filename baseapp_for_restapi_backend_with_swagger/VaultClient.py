@@ -55,12 +55,13 @@ class VaultClient():
 
     def get_secret(self, ref) -> str:
         if self.client is None:
-            raise Exception('Vault client is not initialized - is this a mock instance?')
-        self._ensure_authenticated()
+            # If we don't have a client it is a mock instance so just return the full secret ref
+            return ref
         try:
             path, field = ref.rsplit(":", 1)
         except ValueError:
             raise ValueError("Invalid secret reference. Expected format: '<path>:<field>'")
+        self._ensure_authenticated()
 
         try:
             result = self.client.secrets.kv.v2.read_secret_version(
