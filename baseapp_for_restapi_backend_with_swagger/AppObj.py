@@ -188,13 +188,21 @@ class AppObjBaseClass():
       if originHeader in self.accessControlAllowOriginObj.data:
         # base app will allow any origin if developer mode is selected
         if (self.globalParamObject.getDeveloperMode()):
-          response.headers.add('Access-Control-Allow-Origin', '*')
-          response.headers.add('Access-Control-Allow-Headers', '*')
-          response.headers.add('Access-Control-Allow-Methods', '*')
+          # response.headers.add('Access-Control-Allow-Origin', '*')
+          # response.headers.add('Access-Control-Allow-Headers', '*')
+          # response.headers.add('Access-Control-Allow-Methods', '*')
+          response.headers['Access-Control-Allow-Origin'] = '*'
+          response.headers['Access-Control-Allow-Headers'] = '*'
+          response.headers['Access-Control-Allow-Methods'] = '*'
+          response.headers['Vary'] = 'Origin'
         else:
-          response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
-          response.headers.add('Access-Control-Allow-Headers', '*')
-          response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+          # response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
+          # response.headers.add('Access-Control-Allow-Headers', '*')
+          # response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+          response.headers['Access-Control-Allow-Origin'] = request.headers.get('Origin')
+          response.headers['Access-Control-Allow-Headers'] = '*'
+          response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+          response.headers['Vary'] = 'Origin'
       return response
 
     api_blueprint = Blueprint('api', __name__)
