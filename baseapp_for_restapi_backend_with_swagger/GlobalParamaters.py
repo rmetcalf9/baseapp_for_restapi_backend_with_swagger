@@ -106,18 +106,18 @@ class GlobalParamatersClass():
   APIAPP_FRONTENDURL = None
 
   def __init__(self, env):
-    self.mode = readFromEnviroment(env, 'APIAPP_MODE', None, ['DEVELOPER','DOCKER'])
-    self.version = readFromEnviroment(env, 'APIAPP_VERSION', None, None)
-    self.webfrontendpath = readFromEnviroment(env, 'APIAPP_FRONTEND', None, None)
-    self.apiurl = readFromEnviroment(env, 'APIAPP_APIURL', None, None)
-    self.apidocsurl = readFromEnviroment(env, 'APIAPP_APIDOCSURL', '_', None)
-    apiaccesssecuritySTR = readFromEnviroment(env, 'APIAPP_APIACCESSSECURITY', None, None)
-    APIAPP_PORTSTR = readFromEnviroment(env, 'APIAPP_PORT', '80', None)
+    self.mode = getReadFromEnviromentFn(env, 'APIAPP_MODE', None, ['DEVELOPER','DOCKER'], False, None)()
+    self.version = getReadFromEnviromentFn(env, 'APIAPP_VERSION', None, None, False, None)()
+    self.webfrontendpath = getReadFromEnviromentFn(env, 'APIAPP_FRONTEND', None, None, False, None)()
+    self.apiurl = getReadFromEnviromentFn(env, 'APIAPP_APIURL', None, None, False, None)()
+    self.apidocsurl = getReadFromEnviromentFn(env, 'APIAPP_APIDOCSURL', '_', None, False, None)()
+    apiaccesssecuritySTR = getReadFromEnviromentFn(env, 'APIAPP_APIACCESSSECURITY', None, None, False, None)()
+    APIAPP_PORTSTR = getReadFromEnviromentFn(env, 'APIAPP_PORT', '80', None, False, None)()
     try:
       self.APIAPP_PORT = int(APIAPP_PORTSTR)
     except:
       raise getInvalidEnvVarParamaterException('APIAPP_PORT', actualValue=APIAPP_PORTSTR, messageOverride='Port must be a number')
-    self.APIAPP_FRONTENDURL = readFromEnviroment(env, 'APIAPP_FRONTENDURL', 'http://UNKNOWN.com/abc/frontend', None)
+    self.APIAPP_FRONTENDURL = getReadFromEnviromentFn(env, 'APIAPP_FRONTENDURL', 'http://UNKNOWN.com/abc/frontend', None, False, None)()
 
     if (self.webfrontendpath != '_'):
       if (not os.path.isdir(self.webfrontendpath)):

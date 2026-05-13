@@ -6,7 +6,7 @@
 
 import pytz
 
-from baseapp_for_restapi_backend_with_swagger import AppObjBaseClass as parAppObj, readFromEnviroment
+from baseapp_for_restapi_backend_with_swagger import AppObjBaseClass as parAppObj, getReadFromEnviromentFn
 from flask_restplus import fields
 import time
 import datetime
@@ -20,7 +20,7 @@ class appObjClass(parAppObj):
   def init(self, env, serverStartTime, testingMode = False):
     self.curDateTimeOverrideForTesting = None
     self.serverStartTime = serverStartTime
-    self.version = readFromEnviroment(env, 'APIAPP_VERSION', None, None)
+    self.version = getReadFromEnviromentFn(env, 'APIAPP_VERSION', None, None, False, None)()
     super(appObjClass, self).init(env)
 
   def initOnce(self):

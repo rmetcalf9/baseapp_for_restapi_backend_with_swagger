@@ -1,7 +1,6 @@
 from flask_restx import Resource, fields
 import datetime
 import pytz
-from baseapp_for_restapi_backend_with_swagger import readFromEnviroment
 
 def getAPIModel(appObj):
   serverInfoServerModel = appObj.flastRestPlusAPIObject.model('mainAPI', {
