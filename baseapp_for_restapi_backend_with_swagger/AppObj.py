@@ -12,7 +12,7 @@ import pytz
 import os
 from .VaultClient import VaultClient
 
-from .GlobalParamaters import GlobalParamatersClass, readFromEnviroment
+from .GlobalParamaters import GlobalParamatersClass, getReadFromEnviromentFn
 ### Removing this from .FlaskRestSubclass import FlaskRestSubclass
 from .webfrontendAPI import webfrontendBP, registerAPI as registerWebFrontendAPI
 from .serverInfoAPI import registerAPI as registerServerInfoAPI
@@ -95,7 +95,9 @@ class AppObjBaseClass():
   isInitOnce = False
   def init(self, envirom, serverStartTime, testingMode, serverinfoapiprefix, useVault=False):
     if useVault:
-      self.vaultClient = VaultClient(envirom, readFromEnviroment)
+      self.vaultClient = VaultClient(envirom, getReadFromEnviromentFn, self.getCurDateTime)
+    else:
+      self.vaultClient = None
 
     if serverinfoapiprefix is None:
       self.serverinfoapiprefix = 'info' #Must have no slashes
@@ -106,7 +108,7 @@ class AppObjBaseClass():
     if self.serverStartTime is None:
       self.serverStartTime = datetime.datetime.now(pytz.utc)
 
-    self.APIAPP_JWTSECRET = readFromEnviroment(envirom, 'APIAPP_JWTSECRET', 'NOSECRETSET435gtvsfd5etrfc4resferfe', None).strip()
+    self.APIAPP_JWTSECRET = getReadFromEnviromentFn(envirom, 'APIAPP_JWTSECRET', 'NOSECRETSET435gtvsfd5etrfc4resferfe', None, False, self.vaultClient)().strip()
     if self.APIAPP_JWTSECRET == 'NOSECRETSET435gtvsfd5etrfc4resferfe':
       #random_secret_str = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
       #self.jwtSecret = b64encode(random_secret_str.encode("utf-8"))
@@ -115,7 +117,7 @@ class AppObjBaseClass():
       #base64 encode incomming secret string
       self.APIAPP_JWTSECRET = b64encode(self.APIAPP_JWTSECRET.encode("utf-8"))
 
-    APIAPP_JWTSKIPSIGNATURECHECKread = readFromEnviroment(envirom, 'APIAPP_JWTSKIPSIGNATURECHECK', defaultValue="N", acceptableValues=["Y", "N"], nullValueAllowed=False)
+    APIAPP_JWTSKIPSIGNATURECHECKread = getReadFromEnviromentFn(envirom, 'APIAPP_JWTSKIPSIGNATURECHECK', defaultValue="N", acceptableValues=["Y", "N"], nullValueAllowed=False, vaultClient=self.vaultClient)()
     self.APIAPP_JWTSKIPSIGNATURECHECK = False
     if APIAPP_JWTSKIPSIGNATURECHECKread=="Y":
       self.APIAPP_JWTSKIPSIGNATURECHECK = True
@@ -124,12 +126,14 @@ class AppObjBaseClass():
       print(" - only use this option in testing mode when using prod saas_usermanagement")
 
 
-    originCommaSeperatedList = readFromEnviroment(
+    originCommaSeperatedList = getReadFromEnviromentFn(
       envirom,
       'APIAPP_COMMON_ACCESSCONTROLALLOWORIGIN',
       '',
-      None
-    )
+      None,
+      False,
+      self.vaultClient
+    )()
     self.accessControlAllowOriginObj = uniqueCommaSeperatedListClass(originCommaSeperatedList)
 
 
@@ -137,7 +141,14 @@ class AppObjBaseClass():
     self.appData = {}
     self.globalParamObject = GlobalParamatersClass(envirom)
 
-    self.version = readFromEnviroment(envirom, 'APIAPP_VERSION', None, None)
+    self.version = getReadFromEnviromentFn(
+      envirom,
+      'APIAPP_VERSION',
+      None,
+      None,
+      False,
+      self.vaultClient
+    )()
     if testingMode:
       print("Warning testing mode active - proper encryption is not being used")
       self.bcrypt = testOnlybcrypt

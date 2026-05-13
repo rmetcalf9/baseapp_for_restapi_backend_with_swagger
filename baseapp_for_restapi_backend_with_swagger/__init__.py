@@ -11,10 +11,11 @@
 from .AppObj import AppObjBaseClass
 from .requestHelper import getPaginatedParamValues
 from .utils import from_iso8601
-from .GlobalParamaters import GlobalParamatersClass, getInvalidEnvVarParamaterException, readFromEnviroment, getMissingVarFileException
+from .GlobalParamaters import GlobalParamatersClass, getInvalidEnvVarParamaterException, readFromEnviroment, getMissingVarFileException, VaultValueFoundWhenUsingIncompatibleReadFunction, getReadFromEnviromentFn, VaultValueFoundButMissingVaultClient, InvalidVaultRefException
 from .FlaskRestSubclass import FlaskRestSubclass
 from .apiSecurity import apiSecurityCheck, decodeJWTToken, DecodedTokenClass
 from .uniqueCommaSeperatedList import uniqueCommaSeperatedListClass
+from .VaultClient import VaultClient
 
 from . import _version
 __version__ = _version.get_versions()['version']

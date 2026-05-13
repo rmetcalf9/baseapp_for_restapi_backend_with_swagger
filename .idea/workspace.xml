@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd74c761-ea4a-4c4d-a330-feed9b0a4868" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/tests/test_gp_getReadfromEnvironmentFn.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_gp_readfromEnvironment.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VERSION" beforeDir="false" afterPath="$PROJECT_DIR$/VERSION" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/AppObj.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/AppObj.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/GlobalParamaters.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/GlobalParamaters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/VaultClient.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/VaultClient.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseapp_for_restapi_backend_with_swagger/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/ENVVARIABLES.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/ENVVARIABLES.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_GlobalParamaters.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_GlobalParamaters.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -1,4 +1,4 @@
-# Enviroment variable configuration detail
+# Environment variable configuration detail
 
  | Name | Example Value | Meaning |
  | ---- | ------------- | ------- |
@@ -10,3 +10,15 @@
  | APIAPP_APIACCESSSECURITY |  | Must be valid JSON. Holds information the frontend needs to access the API. E.g. basic-auth means it will prompt the user for username and password and provide that in a header whenever it calls the API. Output in webserver info service call |
  | APIAPP_FRONTENDURL |  | URL the users access to view the frontend. This isn't used apart from for setting redirect url when the frontend is called without a slash. This is an optional paramater but if it isn't set redirects are sent to http://UNKNOWN.com/abc/frontend which is broken. This should not be terminated with a slash. |
  
+# Environment Variables Conventions
+
+Environment variables requested by the app should start APIAPP_*
+If the app finds them it uses them
+If the app finds a variable with the same start but ending with FILE the app will read from the file and use that string value
+If the app finds a variable with the same start but ending with VAULT the app will assume it's getting a vault path:param style reference and use the looked up string
+
+Apps that use vault must supply:
+APIAPP_VAULT_URL
+APIAPP_VAULT_ROLE_ID
+APIAPP_VAULT_SECRET_ID
+(These can also have FILE at the end, but not VAULT)

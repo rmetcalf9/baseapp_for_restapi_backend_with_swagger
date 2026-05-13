@@ -22,39 +22,77 @@ class InvalidEnvVarParamaterExecption(Exception):
 missingVarFileExceptions = dict()
 class MissingVarFileExceptionClass(Exception):
   def __init__(self, envVarName, fileName):
-    super(MissingVarFileExceptionClass, self).__init__("Missing Enviroment File var=" + envVarName + " file=" + fileName)
+    super(MissingVarFileExceptionClass, self).__init__("Missing Environment File var=" + envVarName + " file=" + fileName)
 def getMissingVarFileException(envVarName, fileName):
   if envVarName not in missingVarFileExceptions:
     missingVarFileExceptions[envVarName] = MissingVarFileExceptionClass(envVarName, fileName)
   return missingVarFileExceptions[envVarName]
+class VaultValueFoundWhenUsingIncompatibleReadFunction(Exception):
+  env_var_name = None
+  def __init__(self, env_var_name):
+    self.env_var_name = env_var_name
+    super().__init__("Found VAULT environment variable for " + env_var_name + " but code uses old read method incompatible with vault")
+class VaultValueFoundButMissingVaultClient(Exception):
+  env_var_name = None
+  def __init__(self, env_var_name):
+    self.env_var_name = env_var_name
+    super().__init__("Found VAULT environment variable for " + env_var_name + " but no vault client setup")
+class InvalidVaultRefException(Exception):
+  pass
 
 #Read environment variable or raise an exception if it is missing and there is no default
 def readFromEnviroment(env, envVarName, defaultValue, acceptableValues, nullValueAllowed=False):
-  val = None
-  if envVarName not in env:
-    if envVarName.startswith("APIAPP_"):
-      if envVarName + "FILE" in env:
-        print("Reading param from file for " + envVarName)
-        if not os.path.isfile(env[envVarName + "FILE"]):
-          raise getMissingVarFileException(envVarName, env[envVarName + "FILE"])
-        with open(env[envVarName + "FILE"], 'r') as file:
-            val = file.read()
-  if val is None:
-    try:
-      val = env[envVarName]
-    except KeyError:
-      if (defaultValue == None):
-        raise getInvalidEnvVarParamaterException(envVarName, None, 'Enviroment variable not set and no default')
-      return defaultValue
+  print("baseapp Future deprecation warning: readFromEnviroment used for " + envVarName + " should be migrated to getReadFromEnviromentFn")
+  if envVarName + "VAULT" in env:
+    raise VaultValueFoundWhenUsingIncompatibleReadFunction(envVarName)
+  return getReadFromEnviromentFn(env, envVarName, defaultValue, acceptableValues, nullValueAllowed, None)()
 
-  if (acceptableValues != None):
-    if (val not in acceptableValues):
-      raise getInvalidEnvVarParamaterException(envVarName, val, 'Not an acceptable value')
-  if not nullValueAllowed:
-    if val == '':
-      raise getInvalidEnvVarParamaterException(envVarName, None, 'Null/Empty String')
-  return val
+def getReadFromEnviromentFn(env, envVarName, defaultValue, acceptableValues, nullValueAllowed, vaultClient):
+  isFile = False
+  isVault = False
+  if envVarName.startswith("APIAPP_"):
+    if envVarName + "VAULT" in env:
+      if vaultClient is None:
+        raise VaultValueFoundButMissingVaultClient(envVarName)
+      if not vaultClient.isValidRef(env[envVarName + "VAULT"]):
+        raise InvalidVaultRefException("Invalid vault ref provided in: " + envVarName)
+      isVault = True
+      vaultClient.registerDependantRef(env[envVarName + "VAULT"])
+    elif envVarName + "FILE" in env:
+      isFile = True
+      print("Checking param from file for " + envVarName)
+      if not os.path.isfile(env[envVarName + "FILE"]):
+        raise getMissingVarFileException(envVarName, env[envVarName + "FILE"])
 
+  def reader(skip_cache=False):
+    val = None
+    if envVarName not in env:
+      if envVarName.startswith("APIAPP_"):
+        if isFile:
+          print("Reading param from file for " + envVarName)
+          # recheck for existance in case file was deleted while app is running
+          if not os.path.isfile(env[envVarName + "FILE"]):
+            raise getMissingVarFileException(envVarName, env[envVarName + "FILE"])
+          with open(env[envVarName + "FILE"], 'r') as file:
+              val = file.read()
+        if isVault:
+          return vaultClient.get_secret(env[envVarName + "VAULT"], skip_cache)
+    if val is None:
+      try:
+        val = env[envVarName]
+      except KeyError:
+        if (defaultValue is None):
+          raise getInvalidEnvVarParamaterException(envVarName, None, 'Environment variable not set and no default')
+        return defaultValue
+
+    if (acceptableValues is not None):
+      if (val not in acceptableValues):
+        raise getInvalidEnvVarParamaterException(envVarName, val, 'Not an acceptable value')
+    if not nullValueAllowed:
+      if val == '':
+        raise getInvalidEnvVarParamaterException(envVarName, None, 'Null/Empty String')
+    return val
+  return reader
 
 # class to store GlobalParmaters
 class GlobalParamatersClass():
