@@ -23,7 +23,8 @@ env = {
   'APIAPP_USERFORJOBS': 'root',
   'APIAPP_GROUPFORJOBS': 'root',
   'APIAPP_SKIPUSERCHECK': True,
-  'APIAPP_COMMON_ACCESSCONTROLALLOWORIGIN': 'https://sillysite.com'
+  'APIAPP_COMMON_ACCESSCONTROLALLOWORIGIN': 'https://sillysite.com',
+  'APIAPP_PROJECT_NAME': 'base_app'
 }
 class appObjDer(AppObjBaseClass):
   def getDerivedServerInfoData(self):

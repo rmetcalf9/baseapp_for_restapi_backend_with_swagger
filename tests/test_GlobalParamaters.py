@@ -8,6 +8,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_acceptDEVELOPERMode(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DEVELOPER',
       'APIAPP_VERSION': 'TEST-1.2.3',
       'APIAPP_FRONTEND': '_',
@@ -18,6 +19,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_acceptDOCKERMode(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-1.2.3',
       'APIAPP_FRONTEND': '_',
@@ -28,6 +30,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_dontAcceptInvalidModeThrowsException(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'InvalidMode',
       'APIAPP_VERSION': 'TEST-1.2.3',
       'APIAPP_FRONTEND': '_',
@@ -40,6 +43,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_webservicepathDosentExistThrowsException(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-1.2.3',
       'APIAPP_FRONTEND': '/a/b/c',
@@ -52,6 +56,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_missingVersionThrowsException(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': '',
       'APIAPP_FRONTEND': '_',
@@ -64,6 +69,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_validWebFrontendDirectory(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-1.2.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -74,6 +80,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_startupOutput(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-1.2.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -85,6 +92,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_startupOutputWithAPIDOCSURL(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-1.2.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -97,6 +105,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_developerMode(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-1.2.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -106,6 +115,7 @@ class test_GlobalParamaters(testHelperSuperClass):
     gp = GlobalParamatersClass(env)
     self.assertEqual(gp.getDeveloperMode(), False)
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DEVELOPER',
       'APIAPP_VERSION': 'TEST-1.2.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -117,6 +127,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_getWebServerInfoNoAuth(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-3.3.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -137,6 +148,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_getWebServerInfoBasicAuth(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-3.3.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -157,6 +169,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_invalidAPISecurityJSON(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-3.3.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -169,6 +182,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_getAPIHost(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-3.3.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -181,6 +195,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_getAPIHostWithPort(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-3.3.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -193,6 +208,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_PortOverride(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-3.3.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -205,6 +221,7 @@ class test_GlobalParamaters(testHelperSuperClass):
 
   def test_InvalidPortOverride(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-3.3.3',
       'APIAPP_FRONTEND': self.appDir,
@@ -223,6 +240,7 @@ class test_GlobalParamaters(testHelperSuperClass):
     
   def test_apiURLcanNotEndWithASlash(self):
     env = {
+      'APIAPP_PROJECT_NAME': 'aa',
       'APIAPP_MODE': 'DOCKER',
       'APIAPP_VERSION': 'TEST-3.3.3',
       'APIAPP_FRONTEND': self.appDir,

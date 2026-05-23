@@ -104,8 +104,10 @@ class GlobalParamatersClass():
   apiaccesssecurity = None
   APIAPP_PORT = None
   APIAPP_FRONTENDURL = None
+  APIAPP_PROJECT_NAME = None
 
   def __init__(self, env):
+    self.APIAPP_PROJECT_NAME = getReadFromEnviromentFn(env, 'APIAPP_PROJECT_NAME', None, None, False, None)()
     self.mode = getReadFromEnviromentFn(env, 'APIAPP_MODE', None, ['DEVELOPER','DOCKER'], False, None)()
     self.version = getReadFromEnviromentFn(env, 'APIAPP_VERSION', None, None, False, None)()
     self.webfrontendpath = getReadFromEnviromentFn(env, 'APIAPP_FRONTEND', None, None, False, None)()

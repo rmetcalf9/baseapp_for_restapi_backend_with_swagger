@@ -7,6 +7,7 @@ import copy
 
 serverInfo = {
       'Server': {
+        'APIAPP_PROJECT_NAME': TestHelperSuperClass.env['APIAPP_PROJECT_NAME'],
         'Version': TestHelperSuperClass.env['APIAPP_VERSION'],
         "APIAPP_APIDOCSURL": TestHelperSuperClass.env['APIAPP_APIDOCSURL'],
         "APIAPP_FRONTENDURL": TestHelperSuperClass.env['APIAPP_FRONTENDURL']
