@@ -47,6 +47,8 @@ class VaultClient():
             self.client = hvac.Client(url=VAULT_URL)
             self._authenticate()
 
+        self.listCache = {}
+
     def _authenticate(self):
         """Authenticate with Vault using the AppRole credentials."""
         if self.client is None:
@@ -148,3 +150,43 @@ class VaultClient():
         for path in self.dependantRefs:
             for field in self.dependantRefs[path]:
                 self.get_secret(path + ":" + field, True)
+
+    def list_secrets(self, path, skipCache=False):
+        if self.client is None:
+            return []
+
+        if not skipCache:
+            with self._lock:
+                cached = self.listCache.get(path)
+
+                if cached is not None:
+                    if cached["expiry"] is None:
+                        return cached["keys"]
+
+                    if self.getCurDateTime() < cached["expiry"]:
+                        return cached["keys"]
+
+        self._ensure_authenticated()
+
+        try:
+            result = self.client.secrets.kv.v2.list_secrets(
+                path=path,
+                mount_point="kv"
+            )
+
+            keys = result["data"]["keys"]
+
+            expiry_time = self.getCurDateTime() + DEFAULT_EXPIRY_DURATION
+
+            with self._lock:
+                self.listCache[path] = {
+                    "keys": keys,
+                    "expiry": expiry_time
+                }
+
+            return keys
+
+        except hvac.exceptions.InvalidPath:
+            return []
+        except hvac.exceptions.Forbidden:
+            raise PermissionError(f"No access to list Vault path: {path}")
