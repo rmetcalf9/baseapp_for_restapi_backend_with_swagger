@@ -76,6 +76,7 @@ def getReadFromEnviromentFn(env, envVarName, defaultValue, acceptableValues, nul
           with open(env[envVarName + "FILE"], 'r') as file:
               val = file.read()
         if isVault:
+          print(f"Reading param from vault for {envVarName} (location: {env[envVarName + "VAULT"]})")
           return vaultClient.get_secret(env[envVarName + "VAULT"], skip_cache)
     if val is None:
       try:
