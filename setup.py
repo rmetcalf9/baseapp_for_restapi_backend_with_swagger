@@ -8,7 +8,7 @@ sp_install_requires = [
   'flask_restx==1.3.0',
   'python-dateutil==2.9.0.post0',
   'sortedcontainers==2.4.0',
-  'bcrypt==3.1.5',
+  'bcrypt==5.0.0',
   'pyjwt==2.8.0',
   'hvac==2.4.0'
 ]
